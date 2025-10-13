@@ -3,7 +3,6 @@ from moviepy import *
 from datetime import datetime
 import models
 from database import SessionLocal
-from sqlalchemy.orm import Session
 
 celery_app = Celery("tasks", broker="redis://localhost:6379")
 
@@ -38,7 +37,7 @@ def process_video(filename:str, title: str, video_id: int):
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
     try:
-        video = db.query(models.ProcessedVideo).filter(models.ProcessedVideo.video_id == video_id).first
+        video = db.query(models.Video).filter(models.Video.video_id == video_id).first
         if not video:
             pass
         else:

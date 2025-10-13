@@ -55,12 +55,16 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
         video_file.file.close()
 
 def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
-    db_video = models.ProcessedVideo(title=title, uploaded_at=uploaded_at, processed_at=None, processed_url=None)
+    original_url = "https://anb.com/uploads/"+title+".mp4"
+    db_video = models.Video(title=title, status=models.VideoStatus.UPLOADED, uploaded_at=uploaded_at, 
+                            processed_at=None, original_url=original_url, processed_url=None)
     db.add(db_video)
     db.commit()
     db.refresh(db_video)
     video_id = db_video.video_id
     return video_id
+
+# TODO: Añadir autenticacion para solo ver videos propios
 
 # 2. Consultar mis videos
 @app.get("/api/videos")
