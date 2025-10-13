@@ -1,0 +1,1 @@
+Carpeta usada para almacenar los videos procesados

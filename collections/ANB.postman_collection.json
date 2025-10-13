@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "72985e53-2594-4655-9f38-36ad64b38132",
+		"name": "ANB",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17535481"
+	},
+	"item": [
+		{
+			"name": "Upload video",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "video_file",
+							"type": "file",
+							"src": "postman-cloud:///1f0a7f6c-d053-47b0-8563-73ed9eb07083"
+						},
+						{
+							"key": "title",
+							"value": "MJ",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/videos/upload",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"upload"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Upload videos",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video_file",
+									"type": "file",
+									"src": "postman-cloud:///1f0a7f6c-d053-47b0-8563-73ed9eb07083"
+								},
+								{
+									"key": "title",
+									"value": "MJ",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/videos/upload",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								"upload"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 13 Oct 2025 05:44:19 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "81"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Video subido correctamente. Procesamiento en curso\",\n    \"task_id\": \"TODO\"\n}"
+				}
+			]
+		}
+	]
+}
