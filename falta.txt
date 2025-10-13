@@ -1,3 +1,0 @@
-- Todo lo relacionado a brokers de mensajeria
-- Identificacion para solo ver los videos propios
-- Que pasa si dos videos tienen el mismo nombre..?
