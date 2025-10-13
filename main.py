@@ -74,7 +74,7 @@ async def process_video(filename:str, title: str):
     video = CompositeVideoClip([image, video])
 
     # 4. Agregar logo ANB
-    anb_logo = VideoFileClip("assets/anb_logo.mp4")
+    anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=900)
     videos = [anb_logo, video, anb_logo]
     final_video = concatenate_videoclips(videos, method='compose')
     final_video.write_videofile("processed_videos/"+title+".mp4") 
