@@ -6,3 +6,4 @@ original_videos/*
 
 processed_videos/*
 !processed_videos/readme.txt
+.idea/
