@@ -7,9 +7,9 @@ from pathlib import Path
 from pydantic import BaseModel
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from tasks import process_video
 import models
 import shutil
-import asyncio
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
@@ -29,7 +29,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 # 1. Carga de video 
 @app.post("/api/videos/upload")
-async def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()], db: db_dependency):
+def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()], db: db_dependency):
 
     # Se guarda el video original para procesarlo
     upload_dir = Path("original_videos")
@@ -43,41 +43,24 @@ async def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotat
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
         # TODO: Ajustar con broker
-        task = asyncio.create_task(process_video(filename, title))
-        db_video = models.ProcessedVideo(title=title, uploaded_at=datetime.now())
-        db.add(db_video)
-        db.commit()
+        video_id = add_uploaded_video(title, datetime.now(), db)
+        result = process_video.delay(filename, title, video_id)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
-                              "task_id": "TODO"}) #TODO: Agregar task_id
+                              "task_id": result.id}) 
     except Exception as e:
         return JSONResponse(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
-        
-async def process_video(filename:str, title: str):
-    video = VideoFileClip("original_videos/"+filename)
-    # 1. Quitar audio
-    video = video.with_volume_scaled(0.0)
 
-    # 2. Recortar a 30s
-    video_length = video.duration
-    if video_length > 30:
-        video = video.subclipped(0,30)
-
-    # 3. Ajustar ratio a 16:9
-    video = video.resized(height=900)
-    image = ImageClip("assets/resize_image.png")
-    image = image.with_duration(video.duration)
-    video = video.with_position("center")
-    video = CompositeVideoClip([image, video])
-
-    # 4. Agregar logo ANB
-    anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=900)
-    videos = [anb_logo, video, anb_logo]
-    final_video = concatenate_videoclips(videos, method='compose')
-    final_video.write_videofile("processed_videos/"+title+".mp4") 
+def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
+    db_video = models.ProcessedVideo(title=title, uploaded_at=uploaded_at, processed_at=None, processed_url=None)
+    db.add(db_video)
+    db.commit()
+    db.refresh(db_video)
+    video_id = db_video.video_id
+    return video_id
 
 # 2. Consultar mis videos
 @app.get("/api/videos")
