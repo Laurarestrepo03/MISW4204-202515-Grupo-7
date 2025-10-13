@@ -28,7 +28,7 @@ def process_video(filename:str, title: str, video_id: int):
     anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=900)
     videos = [anb_logo, video, anb_logo]
     final_video = concatenate_videoclips(videos, method='compose')
-    final_video.write_videofile("processed_videos/"+title+".mp4") 
+    final_video.write_videofile("processed_videos/"+title+".mp4")
 
     processed_url = "https://anb.com/videos/processed/"+title+".mp4"
 
@@ -37,10 +37,11 @@ def process_video(filename:str, title: str, video_id: int):
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
     try:
-        video = db.query(models.Video).filter(models.Video.video_id == video_id).first
+        video = db.get(models.Video, video_id)
         if not video:
             pass
         else:
+            video.status = models.VideoStatus.PROCESSED
             video.processed_at = processed_at
             video.processed_url = processed_url
             db.commit()    
