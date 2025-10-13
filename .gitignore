@@ -2,8 +2,6 @@
 __pycache__/
 
 original_videos/*
-!original_videos/readme.txt
-
 processed_videos/*
-!processed_videos/readme.txt
+
 .idea/
