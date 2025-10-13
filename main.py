@@ -1,22 +1,35 @@
-from fastapi import FastAPI, UploadFile, Form, status
+from fastapi import FastAPI, UploadFile, Form, status, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from datetime import datetime
 from moviepy import *
-from typing import Annotated
+from typing import Annotated, List
 from pathlib import Path
+from pydantic import BaseModel
+from database import engine, SessionLocal
+from sqlalchemy.orm import Session
+import models
 import shutil
 import asyncio
 
 app = FastAPI()
+models.Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def root():
     return {"Hello":"World"}
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+db_dependency = Annotated[Session, Depends(get_db)]
 
 # 1. Carga de video 
 @app.post("/api/videos/upload")
-async def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()]):
+async def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()], db: db_dependency):
 
     # Se guarda el video original para procesarlo
     upload_dir = Path("original_videos")
@@ -31,6 +44,9 @@ async def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotat
             shutil.copyfileobj(video_file.file, buffer)
         # TODO: Ajustar con broker
         task = asyncio.create_task(process_video(filename, title))
+        db_video = models.ProcessedVideo(title=title, uploaded_at=datetime.now())
+        db.add(db_video)
+        db.commit()
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                               "task_id": "TODO"}) #TODO: Agregar task_id
