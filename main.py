@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from tasks import process_video
 import models
 import shutil
+import os
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
@@ -30,32 +31,40 @@ db_dependency = Annotated[Session, Depends(get_db)]
 @app.post("/api/videos/upload")
 def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()], db: db_dependency):
     
-    if video_file.content_type != "video/mp4":
-        return JSONResponse(status_code = status.HTTP_400_BAD_REQUEST, 
+    four_hundred_error = JSONResponse(status_code = status.HTTP_400_BAD_REQUEST, 
                             content = {"message": "Error en el archivo (tipo o tamaño inválido)."})
-    else:
-        # Se guarda el video original para procesarlo
-        upload_dir = Path("original_videos")
-        upload_dir.mkdir(parents=True, exist_ok=True)
-        filename = video_file.filename
-        file_location = upload_dir / filename
 
-        # TODO: Error 401
+    if video_file.content_type != "video/mp4":
+        return four_hundred_error
 
-        try:
-            with open(file_location, "wb") as buffer:
-                shutil.copyfileobj(video_file.file, buffer)
-            # TODO: Ajustar con broker
-            video_id = add_uploaded_video(title, datetime.now(), db)
-            result = process_video.delay(filename, title, video_id)
-            return JSONResponse(status_code = status.HTTP_201_CREATED, 
-                                content = {"message": "Video subido correctamente. Procesamiento en curso",
-                                "task_id": result.id}) 
-        except Exception as e:
-            return JSONResponse(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
-                                content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
-        finally:
-            video_file.file.close()
+    # Se guarda el video original para procesarlo
+    upload_dir = Path("original_videos")
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    filename = video_file.filename
+    file_location = upload_dir / filename
+
+    # TODO: Error 401
+
+    try:
+        with open(file_location, "wb") as buffer:
+            shutil.copyfileobj(video_file.file, buffer)
+        video_path = "original_videos/"+filename
+        video = VideoFileClip(video_path)
+        duration = video.duration
+        if duration < 20 or duration > 60:
+            video.close()
+            os.remove(video_path)
+            return four_hundred_error
+        video_id = add_uploaded_video(title, datetime.now(), db)
+        result = process_video.delay(video_path, title, video_id)
+        return JSONResponse(status_code = status.HTTP_201_CREATED, 
+                            content = {"message": "Video subido correctamente. Procesamiento en curso",
+                            "task_id": result.id}) 
+    except Exception as e:
+        return JSONResponse(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
+    finally:
+        video_file.file.close()
 
 def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"

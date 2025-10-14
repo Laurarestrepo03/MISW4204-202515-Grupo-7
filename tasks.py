@@ -7,8 +7,9 @@ from database import SessionLocal
 celery_app = Celery("tasks", broker="redis://localhost:6379")
 
 @celery_app.task
-def process_video(filename:str, title: str, video_id: int):
-    video = VideoFileClip("original_videos/"+filename)
+def process_video(video_path: str, title: str, video_id: int):
+    video = VideoFileClip(video_path)
+
     # 1. Quitar audio
     video = video.with_volume_scaled(0.0)
 
