@@ -20,11 +20,11 @@ def process_video(video_path: str, title: str, video_id: int):
 
     # 3. Ajustar ratio a 16:9 (calidad 720p)
     resolution = 720
+    background = ColorClip(size=(1280, 720), color=(0, 0, 0))
+    background = background.with_duration(video.duration)
     video = video.resized(height=resolution)
-    image = ImageClip("assets/resize_image.png")
-    image = image.with_duration(video.duration)
     video = video.with_position("center")
-    video = CompositeVideoClip([image, video])
+    video = CompositeVideoClip([background, video])
 
     # 4. Agregar logo ANB
     anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=resolution)
