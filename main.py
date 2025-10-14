@@ -96,7 +96,7 @@ def get_videos_uploaded():
 
 # 3. Consultar detalle de un video especifico
 @app.get("/api/videos/{video_id}")
-def get_video(id_video: int):
+def get_video(video_id: int):
     return None
 
 # 4. Eliminar video subido
