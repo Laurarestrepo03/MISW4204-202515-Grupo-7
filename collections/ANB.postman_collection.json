@@ -21,7 +21,7 @@
 						},
 						{
 							"key": "title",
-							"value": "MJ",
+							"value": "Best of MJ",
 							"type": "text"
 						}
 					]
@@ -45,7 +45,7 @@
 			},
 			"response": [
 				{
-					"name": "Upload videos",
+					"name": "201 Created",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
@@ -55,11 +55,11 @@
 								{
 									"key": "video_file",
 									"type": "file",
-									"src": "postman-cloud:///1f0a7f6c-d053-47b0-8563-73ed9eb07083"
+									"src": "postman-cloud:///1f0a7d91-2b57-48b0-875b-034301e07afc"
 								},
 								{
 									"key": "title",
-									"value": "MJ",
+									"value": "LB 1919",
 									"type": "text"
 								}
 							]
@@ -83,11 +83,11 @@
 					},
 					"status": "Created",
 					"code": 201,
-					"_postman_previewlanguage": "",
+					"_postman_previewlanguage": null,
 					"header": [
 						{
 							"key": "date",
-							"value": "Mon, 13 Oct 2025 05:44:19 GMT"
+							"value": "Tue, 14 Oct 2025 00:19:15 GMT"
 						},
 						{
 							"key": "server",
@@ -95,7 +95,7 @@
 						},
 						{
 							"key": "content-length",
-							"value": "81"
+							"value": "113"
 						},
 						{
 							"key": "content-type",
@@ -103,7 +103,68 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"message\": \"Video subido correctamente. Procesamiento en curso\",\n    \"task_id\": \"TODO\"\n}"
+					"body": "{\n    \"message\": \"Video subido correctamente. Procesamiento en curso\",\n    \"task_id\": \"454e4cb0-8053-489e-8331-3d468bb1d014\"\n}"
+				},
+				{
+					"name": "400 Bad Request",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "video_file",
+									"type": "file",
+									"src": "postman-cloud:///1f0a8981-a7f2-4180-97df-e2d8cb6d6f4b"
+								},
+								{
+									"key": "title",
+									"value": "Horario",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api/videos/upload",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								"upload"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Tue, 14 Oct 2025 00:54:16 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "60"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"El tipo de archivo es incorrecto, debe ser mp4\"\n}"
 				}
 			]
 		}
