@@ -32,7 +32,7 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
     
     if video_file.content_type != "video/mp4":
         return JSONResponse(status_code = status.HTTP_400_BAD_REQUEST, 
-                            content = {"message": "El tipo de archivo es incorrecto, debe ser mp4"})
+                            content = {"message": "Error en el archivo (tipo o tamaño inválido)."})
     else:
         # Se guarda el video original para procesarlo
         upload_dir = Path("original_videos")
