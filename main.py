@@ -40,7 +40,7 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
     # Se guarda el video original para procesarlo
     upload_dir = Path("original_videos")
     upload_dir.mkdir(parents=True, exist_ok=True)
-    filename = video_file.filename
+    filename = video_file.filename.replace(" ", "_")
     file_location = upload_dir / filename
 
     # TODO: Error 401
@@ -58,6 +58,7 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
             return four_hundred_error
         video_id = add_uploaded_video(title, datetime.now(), db)
         result = process_video.delay(video_path, title, video_id)
+        add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "task_id": result.id}) 
@@ -76,6 +77,14 @@ def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
     db.refresh(db_video)
     video_id = db_video.video_id
     return video_id
+
+def add_task_id(video_id: int, task_id: int, db: db_dependency):
+    video = db.get(models.Video, video_id)
+    if not video:
+        pass
+    else:
+        video.task_id = task_id
+    db.commit()
 
 # TODO: Añadir autenticacion para solo ver videos propios
 
