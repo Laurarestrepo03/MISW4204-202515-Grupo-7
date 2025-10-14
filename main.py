@@ -51,7 +51,8 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
         video_path = "original_videos/"+filename
         video = VideoFileClip(video_path)
         duration = video.duration
-        if duration < 20 or duration > 60:
+        file_size = os.path.getsize(video_path) / (1024*1024)
+        if duration < 20 or duration > 60 or file_size > 100:
             video.close()
             os.remove(video_path)
             return four_hundred_error
