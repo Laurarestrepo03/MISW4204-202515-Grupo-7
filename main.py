@@ -55,7 +55,7 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
         video_file.file.close()
 
 def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
-    original_url = "https://anb.com/uploads/"+title+".mp4"
+    original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
     db_video = models.Video(title=title, status=models.VideoStatus.UPLOADED, uploaded_at=uploaded_at, 
                             processed_at=None, original_url=original_url, processed_url=None)
     db.add(db_video)

@@ -30,7 +30,7 @@ def process_video(filename:str, title: str, video_id: int):
     final_video = concatenate_videoclips(videos, method='compose')
     final_video.write_videofile("processed_videos/"+title+".mp4")
 
-    processed_url = "https://anb.com/videos/processed/"+title+".mp4"
+    processed_url = "https://anb.com/videos/processed/"+title.replace(" ", "_")+".mp4"
 
     update_uploaded_info(video_id, datetime.now(), processed_url)
 
