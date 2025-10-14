@@ -17,15 +17,16 @@ def process_video(filename:str, title: str, video_id: int):
     if video_length > 30:
         video = video.subclipped(0,30)
 
-    # 3. Ajustar ratio a 16:9
-    video = video.resized(height=900)
+    # 3. Ajustar ratio a 16:9 (calidad 720p)
+    height = 720
+    video = video.resized(height=height)
     image = ImageClip("assets/resize_image.png")
     image = image.with_duration(video.duration)
     video = video.with_position("center")
     video = CompositeVideoClip([image, video])
 
     # 4. Agregar logo ANB
-    anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=900)
+    anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=height)
     videos = [anb_logo, video, anb_logo]
     final_video = concatenate_videoclips(videos, method='compose')
     final_video.write_videofile("processed_videos/"+title+".mp4")
