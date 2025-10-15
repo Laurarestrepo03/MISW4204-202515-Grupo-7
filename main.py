@@ -170,46 +170,6 @@ def get_video(video_id: int):
 
 # 4. Eliminar video subido
 @app.delete("/api/videos/{video_id}")
-def delete_video(video_id: int):
-    return None
-
-# Obtener el ranking de jugadores por votos
-@app.get("/api/public/ranking")
-def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
-    conditions = []
-    if name:
-        conditions.append(or_(models.Player.first_name.ilike(f"%{name}%"), models.Player.last_name.ilike(f"%{name}%")))
-    if city:
-        conditions.append(models.Player.city.ilike(f"%{city}%"))
-
-    query = (
-        db.query(models.Player.player_id,
-            models.Player.first_name,
-            models.Player.last_name,
-            models.Player.city,
-            func.coalesce(func.sum(models.Video.votes), 0).label("total_votes"))
-        .join(models.Video)
-        .filter(*conditions)
-        .group_by(models.Player.player_id)
-        .order_by(func.sum(models.Video.votes).desc())
-        .offset(page * page_size).limit(page_size).all())
-
-    players = []
-    position = 0
-    for p in query:
-        players.append({
-            "position": position + 1 + page * page_size,
-            "username": p.first_name + " " + p.last_name,
-            "city": p.city,
-            "votes": p.total_votes})
-        position += 1
-
-    return JSONResponse(status_code = status.HTTP_200_OK, content = players)
-
-# Votar por un video
-@app.post("/api/public/videos/{video_id}/vote")
-def vote_video(db: db_dependency, video_id: int):
-    return None
 def delete_video(
     video_id: int,
     db: db_dependency,
@@ -258,6 +218,44 @@ def delete_video(
         "message": "Video eliminado exitosamente",
         "video_id": video_id
     }
+
+# Obtener el ranking de jugadores por votos
+@app.get("/api/public/ranking")
+def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
+    conditions = []
+    if name:
+        conditions.append(or_(models.Player.first_name.ilike(f"%{name}%"), models.Player.last_name.ilike(f"%{name}%")))
+    if city:
+        conditions.append(models.Player.city.ilike(f"%{city}%"))
+
+    query = (
+        db.query(models.Player.player_id,
+            models.Player.first_name,
+            models.Player.last_name,
+            models.Player.city,
+            func.coalesce(func.sum(models.Video.votes), 0).label("total_votes"))
+        .join(models.Video)
+        .filter(*conditions)
+        .group_by(models.Player.player_id)
+        .order_by(func.sum(models.Video.votes).desc())
+        .offset(page * page_size).limit(page_size).all())
+
+    players = []
+    position = 0
+    for p in query:
+        players.append({
+            "position": position + 1 + page * page_size,
+            "username": p.first_name + " " + p.last_name,
+            "city": p.city,
+            "votes": p.total_votes})
+        position += 1
+
+    return JSONResponse(status_code = status.HTTP_200_OK, content = players)
+
+# Votar por un video
+@app.post("/api/public/videos/{video_id}/vote")
+def vote_video(db: db_dependency, video_id: int):
+    return None
 
 
 # ============= ENDPOINTS DE AUTENTICACIÓN =============

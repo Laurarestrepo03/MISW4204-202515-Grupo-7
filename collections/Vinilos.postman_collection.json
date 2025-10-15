@@ -10,15 +10,65 @@
 		{
 			"name": "Registro",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"first_name\": \"Juan\",\r\n  \"last_name\": \"Pérez\",\r\n  \"email\": \"juan2@example.com\",\r\n  \"password1\": \"Password123\",\r\n  \"password2\": \"Password123\",\r\n  \"city\": \"Bogotá\",\r\n  \"country\": \"Colombia\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
 			},
 			"response": [
 				{
 					"name": "201 Created",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"Juan\",\r\n  \"last_name\": \"Pérez\",\r\n  \"email\": \"maria@example.com\",\r\n  \"password1\": \"Password123\",\r\n  \"password2\": \"Password123\",\r\n  \"city\": \"Bogotá\",\r\n  \"country\": \"Colombia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -28,8 +78,36 @@
 				{
 					"name": "400 Bad validation",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"Juan\",\r\n  \"last_name\": \"Pérez\",\r\n  \"email\": \"juan2@example.com\",\r\n  \"password1\": \"Password123\",\r\n  \"password2\": \"Password123\",\r\n  \"city\": \"Bogotá\",\r\n  \"country\": \"Colombia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -39,8 +117,36 @@
 				{
 					"name": "201 Created second user",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"first_name\": \"Maria\",\r\n  \"last_name\": \"Angela\",\r\n  \"email\": \"maria@example.com\",\r\n  \"password1\": \"Password12345\",\r\n  \"password2\": \"Password12345\",\r\n  \"city\": \"Bogotá\",\r\n  \"country\": \"Colombia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"signup"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -52,15 +158,66 @@
 		{
 			"name": "IniciarSesion",
 			"request": {
-				"method": "GET",
-				"header": []
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"juan@example.com\",\r\n  \"password\": \"Password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
 			},
 			"response": [
 				{
-					"name": "200 Authenticated",
+					"name": "200 User 1",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"maria55@example.com\",\r\n  \"password\": \"Password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -68,21 +225,83 @@
 					"body": null
 				},
 				{
-					"name": "401 Bad Credentials",
+					"name": "401 Invalid credentials",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"juan@example.com\",\r\n  \"password\": \"Password1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
-					"cookie": [],
-					"body": null
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
 				},
 				{
-					"name": "Authenticated second user",
+					"name": "200 User 2",
 					"originalRequest": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"maria@example.com\",\r\n  \"password\": \"Password12345\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -94,31 +313,143 @@
 		{
 			"name": "SubirVideoUsuario1",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpYTQ1QGV4YW1wbGUuY29tIiwibmFtZSI6Ikp1YW4gUFx1MDBlOXJleiIsImV4cCI6MTc2MDUwNzgyOH0.vVGr1FPx59Kz7ukwB68ARZPurBqAv24lTJcGyO_P2w4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "video_file",
+							"type": "file",
+							"src": "/C:/Users/nicol/OneDrive/Escritorio/Desarrollo_nube/Proyecto_2/MISW4204-202515-Grupo-7/assets/Michael Jordan.mp4"
+						},
+						{
+							"key": "title",
+							"value": "VideoNBAUsuario1",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/videos/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"upload"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "SubirVideoUsuario2",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpYUBleGFtcGxlLmNvbSIsIm5hbWUiOiJNYXJpYSBBbmdlbGEiLCJleHAiOjE3NjA1MDU2MTJ9.xaAn5nTjv3n2lQMswLTE_bgtvGzfGgYCVSs60LiYkRs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "video_file",
+							"type": "file",
+							"src": "/C:/Users/nicol/OneDrive/Escritorio/Desarrollo_nube/Proyecto_2/MISW4204-202515-Grupo-7/original_videos/Larry Bird.mp4"
+						},
+						{
+							"key": "title",
+							"value": "LarryBirdUser2",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/videos/upload",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"upload"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "ConsultarVideos",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpYTQ1QGV4YW1wbGUuY29tIiwibmFtZSI6Ikp1YW4gUFx1MDBlOXJleiIsImV4cCI6MTc2MDUwNzgyOH0.vVGr1FPx59Kz7ukwB68ARZPurBqAv24lTJcGyO_P2w4",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/videos/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						""
+					]
+				}
 			},
 			"response": [
 				{
 					"name": "401 Unauthorized",
 					"originalRequest": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/videos/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								""
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -130,23 +461,82 @@
 		{
 			"name": "DetalleVideo 403 Forbidden",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqdWFuQGV4YW1wbGUuY29tIiwibmFtZSI6Ikp1YW4gUFx1MDBlOXJleiIsImV4cCI6MTc2MDUwNjQzNn0.9DQxteUIoaRRP7OqxdqiRvhf_1cAwCxgXkBLnfKEm7Q",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/videos/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"5"
+					]
+				}
 			},
 			"response": []
 		},
 		{
 			"name": "DetalleVideo",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpYTQ1QGV4YW1wbGUuY29tIiwibmFtZSI6Ikp1YW4gUFx1MDBlOXJleiIsImV4cCI6MTc2MDUwODA0Nn0.0kueym_UMnqWs7haO1rmISbUdWAoBBF6AuSSwvJ1rig",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/videos/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"6"
+					]
+				}
 			},
 			"response": [
 				{
 					"name": "401 unauthorized",
 					"originalRequest": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/videos/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								"2"
+							]
+						}
 					},
 					"_postman_previewlanguage": null,
 					"header": null,
@@ -158,8 +548,31 @@
 		{
 			"name": "EliminarVideo",
 			"request": {
-				"method": "GET",
-				"header": []
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXJpYTQ1QGV4YW1wbGUuY29tIiwibmFtZSI6Ikp1YW4gUFx1MDBlOXJleiIsImV4cCI6MTc2MDUwODA0Nn0.0kueym_UMnqWs7haO1rmISbUdWAoBBF6AuSSwvJ1rig",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/videos/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"videos",
+						"6"
+					]
+				}
 			},
 			"response": []
 		}

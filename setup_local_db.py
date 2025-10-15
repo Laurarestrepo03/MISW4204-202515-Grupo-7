@@ -92,7 +92,9 @@ try:
             original_url TEXT,
             processed_url TEXT,
             votes INTEGER DEFAULT 0,
+            task_id VARCHAR(255),
             user_id INTEGER NOT NULL,
+            player_id INTEGER,
             FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
         )
     """)

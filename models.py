@@ -1,6 +1,5 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, DateTime, Enum
 from sqlalchemy.orm import relationship
-from sqlalchemy.orm import relationship
 from database import Base
 import enum
 
@@ -33,6 +32,12 @@ class Video(Base):
     processed_url = Column(String, nullable=True)
     votes = Column(Integer, default=0)
     task_id = Column(String, nullable=True)
+    
+    # Relación con usuario
+    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
+    user = relationship("User", back_populates="videos")
+    
+    # Relación con player
     player_id = Column(Integer, ForeignKey('players.player_id'))
     player = relationship('Player', back_populates='videos')
 
@@ -56,7 +61,3 @@ class Vote(Base):
     created_at = Column(DateTime)
     video = relationship('Video')
     player = relationship('Player')
-    
-    # Relación con usuario
-    user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
-    user = relationship("User", back_populates="videos")
