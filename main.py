@@ -1,6 +1,7 @@
-from fastapi import FastAPI, UploadFile, Form, status, Depends
+from fastapi import FastAPI, UploadFile, Form, status, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from datetime import datetime
+from fastapi.security import HTTPAuthorizationCredentials
+from datetime import datetime, timedelta
 from moviepy import *
 from typing import Annotated
 from pathlib import Path
@@ -10,6 +11,7 @@ from tasks import process_video
 import models
 import shutil
 import os
+import auth
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
@@ -29,7 +31,12 @@ db_dependency = Annotated[Session, Depends(get_db)]
 
 # 1. Carga de video 
 @app.post("/api/videos/upload")
-def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str, Form()], db: db_dependency):
+def upload_video(
+    video_file: Annotated[UploadFile, Form()], 
+    title: Annotated[str, Form()], 
+    db: db_dependency,
+    current_user: models.User = Depends(auth.get_current_user)
+):
     
     four_hundred_error = JSONResponse(status_code = status.HTTP_400_BAD_REQUEST, 
                             content = {"message": "Error en el archivo (tipo o tamaño inválido)."})
@@ -43,8 +50,6 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
     filename = video_file.filename
     file_location = upload_dir / filename
 
-    # TODO: Error 401
-
     try:
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
@@ -56,7 +61,7 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
             video.close()
             os.remove(video_path)
             return four_hundred_error
-        video_id = add_uploaded_video(title, datetime.now(), db)
+        video_id = add_uploaded_video(title, datetime.now(), current_user.user_id, db)
         result = process_video.delay(video_path, title, video_id)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
@@ -67,30 +72,276 @@ def upload_video(video_file: Annotated[UploadFile, Form()], title: Annotated[str
     finally:
         video_file.file.close()
 
-def add_uploaded_video(title: str, uploaded_at: datetime, db: db_dependency):
+def add_uploaded_video(title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
     db_video = models.Video(title=title, status=models.VideoStatus.UPLOADED, uploaded_at=uploaded_at, 
-                            processed_at=None, original_url=original_url, processed_url=None)
+                            processed_at=None, original_url=original_url, processed_url=None, user_id=user_id)
     db.add(db_video)
     db.commit()
     db.refresh(db_video)
     video_id = db_video.video_id
     return video_id
 
-# TODO: Añadir autenticacion para solo ver videos propios
-
 # 2. Consultar mis videos
 @app.get("/api/videos")
-def get_videos_uploaded():
-    videos = []
-    return None
+def get_videos_uploaded(
+    db: db_dependency,
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Lista todos los videos del usuario autenticado
+    Requiere autenticación mediante token JWT
+    """
+    videos = db.query(models.Video).filter(models.Video.user_id == current_user.user_id).all()
+    
+    videos_response = []
+    for video in videos:
+        videos_response.append({
+            "video_id": video.video_id,
+            "title": video.title,
+            "status": video.status.value,
+            "uploaded_at": video.uploaded_at.isoformat() if video.uploaded_at else None,
+            "processed_at": video.processed_at.isoformat() if video.processed_at else None,
+            "original_url": video.original_url,
+            "processed_url": video.processed_url,
+            "votes": video.votes
+        })
+    
+    return {
+        "videos": videos_response,
+        "total": len(videos_response)
+    }
 
 # 3. Consultar detalle de un video especifico
 @app.get("/api/videos/{video_id}")
-def get_video(id_video: int):
-    return None
+def get_video(
+    video_id: int,
+    db: db_dependency,
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Obtiene el detalle de un video específico
+    Solo permite ver videos del usuario autenticado
+    """
+    # Primero verificar si el video existe
+    video = db.query(models.Video).filter(models.Video.video_id == video_id).first()
+    
+    if not video:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video no encontrado"
+        )
+    
+    # Luego verificar si pertenece al usuario actual
+    if video.user_id != current_user.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permiso para acceder a este video"
+        )
+    
+    return {
+        "video_id": video.video_id,
+        "title": video.title,
+        "status": video.status.value,
+        "uploaded_at": video.uploaded_at.isoformat() if video.uploaded_at else None,
+        "processed_at": video.processed_at.isoformat() if video.processed_at else None,
+        "original_url": video.original_url,
+        "processed_url": video.processed_url,
+        "votes": video.votes,
+        "user": {
+            "email": current_user.email,
+            "name": f"{current_user.first_name} {current_user.last_name}"
+        }
+    }
 
 # 4. Eliminar video subido
 @app.delete("/api/videos/{video_id}")
-def delete_video(video_id: int):
-    return None
+def delete_video(
+    video_id: int,
+    db: db_dependency,
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    """
+    Elimina un video del usuario autenticado
+    Solo permite eliminar videos propios
+    """
+    # Primero verificar si el video existe
+    video = db.query(models.Video).filter(models.Video.video_id == video_id).first()
+    
+    if not video:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video no encontrado"
+        )
+    
+    # Luego verificar si pertenece al usuario actual
+    if video.user_id != current_user.user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tienes permiso para eliminar este video"
+        )
+    
+    # Eliminar archivos físicos si existen
+    try:
+        # Eliminar video original
+        original_path = f"original_videos/{video.title}.mp4"
+        if os.path.exists(original_path):
+            os.remove(original_path)
+        
+        # Eliminar video procesado
+        processed_path = f"processed_videos/{video.title}.mp4"
+        if os.path.exists(processed_path):
+            os.remove(processed_path)
+    except Exception as e:
+        # Continuar aunque falle la eliminación de archivos
+        pass
+    
+    # Eliminar registro de la BD
+    db.delete(video)
+    db.commit()
+    
+    return {
+        "message": "Video eliminado exitosamente",
+        "video_id": video_id
+    }
+
+
+# ============= ENDPOINTS DE AUTENTICACIÓN =============
+
+@app.post("/api/auth/signup", status_code=status.HTTP_201_CREATED)
+def register_user(user: auth.UserRegister, db: db_dependency):
+    """
+    Registro de nuevos usuarios en la plataforma
+    
+    Códigos de respuesta:
+    - 201: Usuario creado exitosamente
+    - 400: Error de validación (email duplicado, contraseñas no coinciden)
+    """
+    # Verificar si el email ya existe
+    existing_user = auth.get_user_by_email(db, user.email)
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Error de validación (email duplicado, contraseñas no coinciden)."
+        )
+    
+    # Validación de contraseñas (ya se hace en el modelo, pero por seguridad)
+    if user.password1 != user.password2:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Error de validación (email duplicado, contraseñas no coinciden)."
+        )
+    
+    # Hash de la contraseña
+    hashed_password = auth.hash_password(user.password1)
+    
+    # Crear usuario en la base de datos
+    db_user = models.User(
+        first_name=user.first_name,
+        last_name=user.last_name,
+        email=user.email,
+        hashed_password=hashed_password,
+        city=user.city,
+        country=user.country,
+        created_at=datetime.utcnow()
+    )
+    
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    
+    return {
+        "message": "Usuario creado exitosamente.",
+        "user": {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "city": user.city,
+            "country": user.country
+        }
+    }
+
+
+@app.post("/api/auth/login", response_model=auth.Token, status_code=status.HTTP_200_OK)
+def login(user_credentials: auth.UserLogin, db: db_dependency):
+    """
+    Autenticación de usuarios y generación de token JWT
+    
+    Códigos de respuesta:
+    - 200: Autenticación exitosa, retorna token
+    - 401: Credenciales inválidas
+    """
+    # Autenticar usuario
+    user = auth.authenticate_user(db, user_credentials.email, user_credentials.password)
+    
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales inválidas.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Crear token JWT
+    access_token_expires = timedelta(seconds=auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = auth.create_access_token(
+        data={"sub": user.email, "name": f"{user.first_name} {user.last_name}"},
+        expires_delta=access_token_expires
+    )
+    
+    return {
+        "access_token": access_token,
+        "token_type": "Bearer",
+        "expires_in": auth.ACCESS_TOKEN_EXPIRE_MINUTES
+    }
+
+
+@app.get("/api/verify-token")
+def verify_token(
+    credentials: HTTPAuthorizationCredentials = Depends(auth.security),
+    db: db_dependency = None
+):
+    """
+    Endpoint para verificar si un token es válido
+    Útil para probar la autenticación
+    """
+    # Obtener sesión de BD manualmente
+    if db is None:
+        db = SessionLocal()
+    
+    try:
+        import jwt
+        token = credentials.credentials
+        payload = jwt.decode(token, auth.SECRET_KEY, algorithms=[auth.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token inválido"
+            )
+        user = auth.get_user_by_email(db, email)
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Usuario no encontrado"
+            )
+        return {
+            "valid": True,
+            "user": {
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name
+            }
+        }
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token expirado"
+        )
+    except jwt.JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token inválido"
+        )
+    finally:
+        if db:
+            db.close()

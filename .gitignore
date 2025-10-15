@@ -5,3 +5,10 @@ original_videos/*
 processed_videos/*
 
 .idea/
+
+# Archivos de documentacion
+GUIA_POSTMAN.md
+RESUMEN_FINAL.md
+GUIA_POSTGRESQL_DBEAVER.md
+CHECKLIST.md
+AUTENTICACION_README.md

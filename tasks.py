@@ -1,6 +1,7 @@
 from celery import Celery
 from moviepy import *
 from datetime import datetime
+from pathlib import Path
 import models
 from database import SessionLocal
 
@@ -8,6 +9,10 @@ celery_app = Celery("tasks", broker="redis://localhost:6379")
 
 @celery_app.task
 def process_video(video_path: str, title: str, video_id: int):
+    # Crear carpeta processed_videos si no existe
+    processed_dir = Path("processed_videos")
+    processed_dir.mkdir(parents=True, exist_ok=True)
+    
     video = VideoFileClip(video_path)
 
     # 1. Quitar audio
