@@ -5,6 +5,7 @@ from moviepy import *
 from typing import Annotated
 from pathlib import Path
 from database import engine, SessionLocal
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 from tasks import process_video
 import models
@@ -103,3 +104,35 @@ def get_video(video_id: int):
 @app.delete("/api/videos/{video_id}")
 def delete_video(video_id: int):
     return None
+
+@app.get("/api/public/ranking")
+def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
+    conditions = []
+    if name:
+        conditions.append(or_(models.Player.first_name.ilike(f"%{name}%"), models.Player.last_name.ilike(f"%{name}%")))
+    if city:
+        conditions.append(models.Player.city.ilike(f"%{city}%"))
+
+    query = (
+        db.query(models.Player.player_id,
+            models.Player.first_name,
+            models.Player.last_name,
+            models.Player.city,
+            func.coalesce(func.sum(models.Video.votes), 0).label("total_votes"))
+        .join(models.Video)
+        .filter(*conditions)
+        .group_by(models.Player.player_id)
+        .order_by(func.sum(models.Video.votes).desc())
+        .offset(page * page_size).limit(page_size).all())
+
+    players = []
+    position = 0
+    for p in query:
+        players.append({
+            "position": position + 1 + page * page_size,
+            "username": p.first_name + " " + p.last_name,
+            "city": p.city,
+            "votes": p.total_votes})
+        position += 1
+
+    return JSONResponse(status_code = status.HTTP_200_OK, content = players)
