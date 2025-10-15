@@ -6,6 +6,7 @@ from moviepy import *
 from typing import Annotated
 from pathlib import Path
 from database import engine, SessionLocal
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 from tasks import process_video
 import models
@@ -47,7 +48,7 @@ def upload_video(
     # Se guarda el video original para procesarlo
     upload_dir = Path("original_videos")
     upload_dir.mkdir(parents=True, exist_ok=True)
-    filename = video_file.filename
+    filename = video_file.filename.replace(" ", "_")
     file_location = upload_dir / filename
 
     try:
@@ -63,6 +64,7 @@ def upload_video(
             return four_hundred_error
         video_id = add_uploaded_video(title, datetime.now(), current_user.user_id, db)
         result = process_video.delay(video_path, title, video_id)
+        add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "task_id": result.id}) 
@@ -81,6 +83,16 @@ def add_uploaded_video(title: str, uploaded_at: datetime, user_id: int, db: db_d
     db.refresh(db_video)
     video_id = db_video.video_id
     return video_id
+
+def add_task_id(video_id: int, task_id: int, db: db_dependency):
+    video = db.get(models.Video, video_id)
+    if not video:
+        pass
+    else:
+        video.task_id = task_id
+    db.commit()
+
+# TODO: Añadir autenticacion para solo ver videos propios
 
 # 2. Consultar mis videos
 @app.get("/api/videos")
@@ -153,9 +165,51 @@ def get_video(
             "name": f"{current_user.first_name} {current_user.last_name}"
         }
     }
+def get_video(video_id: int):
+    return None
 
 # 4. Eliminar video subido
 @app.delete("/api/videos/{video_id}")
+def delete_video(video_id: int):
+    return None
+
+# Obtener el ranking de jugadores por votos
+@app.get("/api/public/ranking")
+def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
+    conditions = []
+    if name:
+        conditions.append(or_(models.Player.first_name.ilike(f"%{name}%"), models.Player.last_name.ilike(f"%{name}%")))
+    if city:
+        conditions.append(models.Player.city.ilike(f"%{city}%"))
+
+    query = (
+        db.query(models.Player.player_id,
+            models.Player.first_name,
+            models.Player.last_name,
+            models.Player.city,
+            func.coalesce(func.sum(models.Video.votes), 0).label("total_votes"))
+        .join(models.Video)
+        .filter(*conditions)
+        .group_by(models.Player.player_id)
+        .order_by(func.sum(models.Video.votes).desc())
+        .offset(page * page_size).limit(page_size).all())
+
+    players = []
+    position = 0
+    for p in query:
+        players.append({
+            "position": position + 1 + page * page_size,
+            "username": p.first_name + " " + p.last_name,
+            "city": p.city,
+            "votes": p.total_votes})
+        position += 1
+
+    return JSONResponse(status_code = status.HTTP_200_OK, content = players)
+
+# Votar por un video
+@app.post("/api/public/videos/{video_id}/vote")
+def vote_video(db: db_dependency, video_id: int):
+    return None
 def delete_video(
     video_id: int,
     db: db_dependency,

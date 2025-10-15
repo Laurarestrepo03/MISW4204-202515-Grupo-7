@@ -41,6 +41,20 @@ def process_video(video_path: str, title: str, video_id: int):
 
     update_uploaded_info(video_id, datetime.now(), processed_url)
 
+@celery_app.task
+def start_processing_videos():
+    db = SessionLocal()
+    try:
+        uploaded_videos = db.query(models.Video).filter_by(status=models.VideoStatus.UPLOADED)
+        for v in uploaded_videos:
+            if not v.task_id:
+                video_path = "original_videos"+v.title.replace(" ", "_")+".mp4"
+                result = process_video.delay(video_path, v.title, v.video_id)
+                v.task_id = result.id
+                db.commit()
+    finally:
+        db.close()
+
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
     try:
