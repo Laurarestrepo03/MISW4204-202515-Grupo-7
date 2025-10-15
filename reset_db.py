@@ -1,24 +1,29 @@
 """
-Script para crear la base de datos 'anb' y las tablas en PostgreSQL local
+Script para REINICIAR la base de datos 'anb' en PostgreSQL local
+⚠️ ADVERTENCIA: Este script BORRARÁ todos los datos existentes
 """
 import psycopg
 from psycopg import sql
-
-# Usuario: postgres
-# Password: Toca poner la que se tenga localmente
-# Database: anb (se creará automáticamente si no existe)
-# Cambiar según configuración local la url, esto hasta que se implemente como un contenedor en docker, aca puse la que uso yo localmente
 
 # Credenciales
 ADMIN_USER = "postgres"
 ADMIN_PASSWORD = "Hecuba33!"
 DB_NAME = "anb"
 
-print("🔧 Creando base de datos y tablas en PostgreSQL local...")
+print("⚠️  ADVERTENCIA: Este script BORRARÁ la base de datos 'anb' y todos sus datos")
 print("=" * 60)
 
-# Paso 1: Crear la base de datos
-print("\n1. Creando base de datos 'anb'...")
+# Confirmación
+respuesta = input("\n¿Estás seguro de que quieres continuar? (escribe 'SI' para confirmar): ")
+if respuesta.upper() != "SI":
+    print("\n❌ Operación cancelada")
+    exit(0)
+
+print("\n🔧 Reiniciando base de datos...")
+print("=" * 60)
+
+# Paso 1: Borrar la base de datos si existe
+print("\n1. Borrando base de datos 'anb' existente...")
 try:
     # Conectarse a la base de datos 'postgres' (siempre existe)
     conn = psycopg.connect(
@@ -31,18 +36,26 @@ try:
     conn.autocommit = True
     cursor = conn.cursor()
     
-    # Verificar si la base de datos ya existe
+    # Verificar si la base de datos existe
     cursor.execute(
         "SELECT 1 FROM pg_database WHERE datname = %s",
         (DB_NAME,)
     )
     
     if cursor.fetchone():
-        print(f"   ⚠️  La base de datos '{DB_NAME}' ya existe")
+        # Terminar todas las conexiones activas a la base de datos
+        cursor.execute(f"""
+            SELECT pg_terminate_backend(pg_stat_activity.pid)
+            FROM pg_stat_activity
+            WHERE pg_stat_activity.datname = '{DB_NAME}'
+            AND pid <> pg_backend_pid()
+        """)
+        
+        # Borrar la base de datos
+        cursor.execute(sql.SQL("DROP DATABASE {}").format(sql.Identifier(DB_NAME)))
+        print(f"   ✅ Base de datos '{DB_NAME}' borrada exitosamente")
     else:
-        # Crear la base de datos
-        cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(DB_NAME)))
-        print(f"   ✅ Base de datos '{DB_NAME}' creada exitosamente")
+        print(f"   ℹ️  La base de datos '{DB_NAME}' no existe")
     
     cursor.close()
     conn.close()
@@ -51,8 +64,32 @@ except Exception as e:
     print(f"   ❌ Error: {e}")
     exit(1)
 
-# Paso 2: Crear las tablas
-print("\n2. Creando tablas...")
+# Paso 2: Crear la base de datos nuevamente
+print("\n2. Creando base de datos 'anb'...")
+try:
+    conn = psycopg.connect(
+        host="localhost",
+        port=5432,
+        dbname="postgres",
+        user=ADMIN_USER,
+        password=ADMIN_PASSWORD
+    )
+    conn.autocommit = True
+    cursor = conn.cursor()
+    
+    # Crear la base de datos
+    cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(DB_NAME)))
+    print(f"   ✅ Base de datos '{DB_NAME}' creada exitosamente")
+    
+    cursor.close()
+    conn.close()
+    
+except Exception as e:
+    print(f"   ❌ Error: {e}")
+    exit(1)
+
+# Paso 3: Crear las tablas
+print("\n3. Creando tablas...")
 try:
     # Conectarse a la nueva base de datos
     conn = psycopg.connect(
@@ -110,15 +147,12 @@ try:
     conn.close()
     
     print("\n" + "=" * 60)
-    print("🎉 ¡TODO CONFIGURADO EXITOSAMENTE!")
+    print("🎉 ¡BASE DE DATOS REINICIADA EXITOSAMENTE!")
     print("=" * 60)
-    print("\n✅ Base de datos: anb")
+    print("\n✅ Base de datos: anb (NUEVA - sin datos)")
     print("✅ Tablas creadas: users, videos")
     print("✅ Índices creados")
-    print("\n🚀 Ahora puedes iniciar el servidor:")
-    print("   uvicorn main:app --reload")
-    print("\n📝 Y probar en Postman:")
-    print("   POST http://localhost:8000/api/auth/signup")
+    print("\n🚀 La base de datos está lista para usar")
     print("=" * 60)
     
 except Exception as e:
