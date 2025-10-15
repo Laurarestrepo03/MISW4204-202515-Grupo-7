@@ -105,6 +105,7 @@ def get_video(video_id: int):
 def delete_video(video_id: int):
     return None
 
+# Obtener el ranking de jugadores por votos
 @app.get("/api/public/ranking")
 def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
     conditions = []
@@ -136,3 +137,8 @@ def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str
         position += 1
 
     return JSONResponse(status_code = status.HTTP_200_OK, content = players)
+
+# Votar por un video
+@app.post("/api/public/videos/{video_id}/vote")
+def vote_video(db: db_dependency, video_id: int):
+    return None
