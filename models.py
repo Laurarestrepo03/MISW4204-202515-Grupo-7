@@ -36,28 +36,13 @@ class Video(Base):
     # Relación con usuario
     user_id = Column(Integer, ForeignKey('users.user_id'), nullable=False)
     user = relationship("User", back_populates="videos")
-    
-    # Relación con player
-    player_id = Column(Integer, ForeignKey('players.player_id'))
-    player = relationship('Player', back_populates='videos')
 
-class Player(Base):
-    __tablename__ = 'players'
-    player_id = Column(Integer, primary_key=True, index=True)
-    first_name = Column(String, index=True)
-    last_name = Column(String, index=True)
-    email = Column(String, index=True)
-    password = Column(String, index=True)
-    city = Column(String, index=True)
-    country = Column(String, index=True)
-    created_at = Column(DateTime)
-    videos = relationship('Video', back_populates='player', cascade='all, delete-orphan')
 
 class Vote(Base):
     __tablename__ = 'votes'
     vote_id = Column(Integer, primary_key=True, index=True)
     video_id = Column(Integer, ForeignKey('videos.video_id'))
-    player_id = Column(Integer, ForeignKey('players.player_id'))
+    user_id = Column(Integer, ForeignKey('users.user_id'))
     created_at = Column(DateTime)
     video = relationship('Video')
-    player = relationship('Player')
+    user = relationship('User')

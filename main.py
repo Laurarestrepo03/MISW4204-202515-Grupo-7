@@ -222,21 +222,23 @@ def delete_video(
 # Obtener el ranking de jugadores por votos
 @app.get("/api/public/ranking")
 def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str = None, city: str = None):
+    #Agregar filtros si se proporcionan
     conditions = []
     if name:
-        conditions.append(or_(models.Player.first_name.ilike(f"%{name}%"), models.Player.last_name.ilike(f"%{name}%")))
+        conditions.append(or_(models.User.first_name.ilike(f"%{name}%"), models.User.last_name.ilike(f"%{name}%")))
     if city:
-        conditions.append(models.Player.city.ilike(f"%{city}%"))
+        conditions.append(models.User.city.ilike(f"%{city}%"))
 
+    # Consulta con paginación y filtros
     query = (
-        db.query(models.Player.player_id,
-            models.Player.first_name,
-            models.Player.last_name,
-            models.Player.city,
+        db.query(models.User.user_id,
+            models.User.first_name,
+            models.User.last_name,
+            models.User.city,
             func.coalesce(func.sum(models.Video.votes), 0).label("total_votes"))
         .join(models.Video)
         .filter(*conditions)
-        .group_by(models.Player.player_id)
+        .group_by(models.User.user_id)
         .order_by(func.sum(models.Video.votes).desc())
         .offset(page * page_size).limit(page_size).all())
 
@@ -254,8 +256,40 @@ def get_ranking(db: db_dependency, page: int = 0, page_size: int = 10, name: str
 
 # Votar por un video
 @app.post("/api/public/videos/{video_id}/vote")
-def vote_video(db: db_dependency, video_id: int):
-    return None
+def vote_video(video_id: int, db: db_dependency, current_user: models.User = Depends(auth.get_current_user)):
+    """
+    Realiza la votación por un video específico
+    Solo permite un voto por video
+    """
+    # Verificar existencia del video
+    video = db.query(models.Video).filter(models.Video.video_id == video_id).first()
+
+    if not video:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Video no encontrado"
+        )
+
+    # Verificar si el usuario ya votó por este video
+    filters = [
+        models.Vote.video_id == video_id,
+        models.Vote.user_id == current_user.user_id
+    ]
+    vote = db.query(models.Vote).filter(*filters).first()
+
+    if vote:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ya has votado por este video"
+        )
+
+    # Realizar voto por el video
+    db_vote = models.Vote(video_id=video_id, user_id=current_user.user_id, created_at=datetime.now())
+    db.add(db_vote)
+    video.votes += 1
+    db.commit()
+
+    return JSONResponse(status_code=status.HTTP_200_OK, content = {"message": "Voto registrado exitosamente."})
 
 
 # ============= ENDPOINTS DE AUTENTICACIÓN =============
