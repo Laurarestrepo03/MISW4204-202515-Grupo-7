@@ -1,13 +1,22 @@
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from dotenv import load_dotenv
 
-# URL de conexión a PostgreSQL LOCAL (Windows)
-# Usuario: postgres
-# Password: Toca poner la que se tenga localmente
-# Database: anb (se creará automáticamente si no existe)
-# Cambiar según configuración local la url, esto hasta que se implemente como un contenedor en docker, aca puse la que uso yo localmente
-URL_DATABASE = 'postgresql+psycopg://postgres:Hecuba33!@localhost:5432/anb'
+load_dotenv()
+
+# Configuración de la base de datos con variables de entorno
+POSTGRES_USER = os.getenv('POSTGRES_USER', 'postgres')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD', 'postgres')
+POSTGRES_DB = os.getenv('POSTGRES_DB', 'anb')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST', 'localhost')
+POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5432')
+
+# Construir URL de la base de datos
+URL_DATABASE = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
+
+print(URL_DATABASE)
 
 engine = create_engine(URL_DATABASE)
 

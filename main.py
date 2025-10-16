@@ -13,9 +13,24 @@ import models
 import shutil
 import os
 import auth
+from pydantic import BaseModel
 
 app = FastAPI()
 models.Base.metadata.create_all(bind=engine)
+
+# Modelos Pydantic para respuestas
+class VideoResponse(BaseModel):
+    video_id: int
+    title: str
+    status: str
+    uploaded_at: datetime
+    processed_at: datetime | None
+    original_url: str
+    processed_url: str | None
+    votes: int
+
+    class Config:
+        from_attributes = True
 
 @app.get("/")
 def root():

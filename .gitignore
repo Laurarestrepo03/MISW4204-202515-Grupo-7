@@ -5,6 +5,7 @@ original_videos/*
 processed_videos/*
 
 .idea/
+<<<<<<< Updated upstream
 
 # Archivos de documentacion
 GUIA_POSTMAN.md
@@ -12,3 +13,6 @@ RESUMEN_FINAL.md
 GUIA_POSTGRESQL_DBEAVER.md
 CHECKLIST.md
 AUTENTICACION_README.md
+=======
+.env
+>>>>>>> Stashed changes
