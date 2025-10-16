@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "076d01cb-5d52-4ce6-b703-a68256556ba7",
+		"_postman_id": "4d3f98a9-1f73-41b8-af51-d5242ea7e1c9",
 		"name": "Vinilos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "30472918",
-		"_collection_link": "https://recetariomisw.postman.co/workspace/Recetario~2f83280c-ced3-41d8-a55f-a3509b5a486b/collection/30472918-076d01cb-5d52-4ce6-b703-a68256556ba7?action=share&source=collection_link&creator=30472918"
+		"_exporter_id": "2866591",
+		"_collection_link": "https://corresponsala-plus.postman.co/workspace/Corresponsal%C3%ADa~5103d83c-dbcc-4efa-8fd2-cdc1a6c50f86/collection/2866591-4d3f98a9-1f73-41b8-af51-d5242ea7e1c9?action=share&source=collection_link&creator=2866591"
 	},
 	"item": [
 		{
@@ -70,10 +70,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				},
 				{
 					"name": "400 Bad validation",
@@ -109,10 +109,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				},
 				{
 					"name": "201 Created second user",
@@ -148,10 +148,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				}
 			]
 		},
@@ -219,10 +219,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				},
 				{
 					"name": "401 Invalid credentials",
@@ -258,7 +258,7 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": "",
+					"_postman_previewlanguage": "Text",
 					"header": [],
 					"cookie": [
 						{
@@ -303,10 +303,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				}
 			]
 		},
@@ -451,10 +451,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				}
 			]
 		},
@@ -538,10 +538,10 @@
 							]
 						}
 					},
-					"_postman_previewlanguage": null,
-					"header": null,
+					"_postman_previewlanguage": "Text",
+					"header": [],
 					"cookie": [],
-					"body": null
+					"body": ""
 				}
 			]
 		},
@@ -575,6 +575,120 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "VotarVideo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqdWFuMkBleGFtcGxlLmNvbSIsIm5hbWUiOiJKdWFuIFBcdTAwZTlyZXoiLCJleHAiOjE3NjA1ODIzNjR9.OwX9qRO-27SGUmvhagDElD5_cIVSNOJ3m11b-TZLsRU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/public/videos/1/vote",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"public",
+						"videos",
+						"1",
+						"vote"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "401 Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/videos/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								""
+							]
+						}
+					},
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "RankingPublico",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqdWFuMkBleGFtcGxlLmNvbSIsIm5hbWUiOiJKdWFuIFBcdTAwZTlyZXoiLCJleHAiOjE3NjA1ODIzNjR9.OwX9qRO-27SGUmvhagDElD5_cIVSNOJ3m11b-TZLsRU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8000/api/public/ranking",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"public",
+						"ranking"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "401 Unauthorized",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/videos/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"videos",
+								""
+							]
+						}
+					},
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": ""
+				}
+			]
 		}
 	]
 }
