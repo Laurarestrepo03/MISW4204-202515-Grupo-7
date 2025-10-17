@@ -107,8 +107,6 @@ def add_task_id(video_id: int, task_id: int, db: db_dependency):
         video.task_id = task_id
     db.commit()
 
-# TODO: Añadir autenticacion para solo ver videos propios
-
 # 2. Consultar mis videos
 @app.get("/api/videos")
 def get_videos_uploaded(
