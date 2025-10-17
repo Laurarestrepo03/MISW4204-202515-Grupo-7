@@ -32,7 +32,7 @@ def test_login_200():
 # Pruebas de gestion de videos
 def test_upload_video_201():
     headers = get_headers()
-    upload_body = generate_upload_body("valid")
+    upload_body = generate_video_body("valid")
     data = upload_body[0]
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
@@ -41,7 +41,7 @@ def test_upload_video_201():
     assert response.json()["task_id"] is not None
 
 def test_upload_video_401():
-    upload_body = generate_upload_body("valid")
+    upload_body = generate_video_body("valid")
     data = upload_body[0]
     files = upload_body[1]
     response = client.post("/api/videos/upload", data=data, files=files)
@@ -52,7 +52,7 @@ four_hundred_error = "Error en el archivo (tipo o tamaño inválido)."
 
 def test_upload_video_400_invalid_type():
     headers = get_headers()
-    upload_body = generate_upload_body("wrong_type")
+    upload_body = generate_video_body("wrong_type")
     data = upload_body[0]
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
@@ -61,6 +61,21 @@ def test_upload_video_400_invalid_type():
 
 def test_upload_video_400_invalid_duration():
     headers = get_headers()
+    upload_body = generate_video_body("wrong_duration")
+    data = upload_body[0]
+    files = upload_body[1]
+    response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    assert response.status_code == 400
+    assert response.json()["message"] == "El video no tiene una duración entre los 20 y 60 segundos."
+
+def test_upload_video_400_invalid_size():
+    headers = get_headers()
+    upload_body = generate_video_body("wrong_size")
+    data = upload_body[0]
+    files = upload_body[1]
+    response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    assert response.status_code == 400
+    assert response.json()["message"] == four_hundred_error
 
 # Pruebas de votacion
 
@@ -95,26 +110,33 @@ def get_headers():
     headers = {"Authorization": f"Bearer {token}"}
     return headers
 
-def generate_upload_body(type: str):
+def generate_video_body(type: str):
     title = faker.sentence()
     rand_video = random.randint(1,2)
+    video_type = "mp4"
 
     if type == "valid":
         if rand_video == 1:
-            video_path = "assets/Larry Bird.mp4"
+            video_name = "Larry Bird.mp4"
         else:
-            video_path = "assets/Michael Jordan.mp4"
-        video_type = "mp4"
+            video_name = "Michael Jordan.mp4"
     elif type == "wrong_type":
         if rand_video == 1:
-            video_path = "assets/Larry Bird.mkv"
+            video_name = "Larry Bird.mkv"
             video_type = "mkv"
         else:
-            video_path = "assets/Michael Jordan.mov"
+            video_name = "Michael Jordan.mov"
             video_type = "mov"
     elif type == "wrong_duration":
-        pass
+        if rand_video == 1:
+            video_name = "Short clip.mp4"
+        else:
+            video_name = "Long clip.mp4"
+    elif type == "wrong_size":
+        video_name = "Large size.mp4"
+
+    video_path = "assets/" + video_name
 
     data = {"title": title}
-    files = {"video_file": ("test_video."+video_type, open(video_path, "rb"), "video/"+video_type)}
+    files = {"video_file": (video_name, open(video_path, "rb"), "video/"+video_type)}
     return data, files
