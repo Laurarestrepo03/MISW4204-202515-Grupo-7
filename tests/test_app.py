@@ -14,6 +14,7 @@ upload_400_hundred_error = "Error en el archivo (tipo, duración o tamaño invá
 signup_400_error = {"detail": "Error de validación (email duplicado, contraseñas no coinciden)."}
 login_401_error = {"detail": "Credenciales inválidas."}
 auth_error = {"detail": "Falta de autenticación."}
+video_404_error = {"detail":"El video con el video_id especificado no existe"}
 
 """def test_root():
     response = client.get("/")
@@ -28,8 +29,6 @@ def test_signup_201():
     assert response.status_code == 201
     assert response.json() == {"message": "Usuario creado exitosamente.", "user": user}
     delete_user(body["email"])
-
-
 
 def test_signup_400_invalid_email():
     body = generate_signup_body()
@@ -54,7 +53,6 @@ def test_login_200():
     assert response.json()["token_type"] == "Bearer"
     assert response.json()["expires_in"] == 3600
     delete_user(signup_body["email"])
-
 
 def test_login_401_invalid_email():
     invalid_email = faker.email()
@@ -102,7 +100,6 @@ def test_upload_video_401():
     assert response.status_code == 401
     assert response.json() == auth_error
 
-
 def test_upload_video_400_invalid_type():
     signup_body = signup()
     token = login(signup_body)
@@ -114,7 +111,6 @@ def test_upload_video_400_invalid_type():
     assert response.status_code == 400
     assert response.json()["message"] == upload_400_hundred_error
     delete_user(signup_body["email"])
-
 
 def test_upload_video_400_invalid_duration():
     signup_body = signup()
@@ -141,8 +137,6 @@ def test_upload_video_400_invalid_duration():
 #     assert response.json()["message"] == upload_400_hundred_error
 #     delete_user(signup_body["email"])
 
-
-# Pruebas de consultar mis videos
 def test_get_videos_200():
     signup_body = signup()
     token = login(signup_body)
@@ -200,7 +194,117 @@ def test_get_video_200():
     delete_user(signup_body["email"])
 
 def test_get_video_401():
-    pass
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    response = client.get("api/videos/"+str(video_id))
+    assert response.status_code == 401
+    assert response.json() == auth_error
+    delete_video(task_id)
+    delete_user(signup_body["email"])
+
+def test_get_video_403():
+    user1_signup_body = signup()
+    user1_token = login(user1_signup_body)
+    user1_headers = get_headers(user1_token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=user1_headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    user2_signup_body = signup()
+    user2_token = login(user2_signup_body)
+    user2_headers = get_headers(user2_token)
+    response = client.get("api/videos/"+str(video_id), headers=user2_headers)
+    assert response.status_code == 403
+    assert response.json() == {"detail":"No tienes permiso para acceder a este video"}
+    delete_video(task_id)
+    delete_user(user1_signup_body["email"])
+    delete_user(user2_signup_body["email"])
+
+def test_get_video_404():
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    delete_video(task_id)
+    response = client.get("api/videos/"+str(video_id), headers=headers)
+    assert response.status_code == 404
+    assert response.json() == video_404_error
+    delete_user(signup_body["email"])
+
+def test_delete_video_200():
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    response = client.delete("api/videos/"+str(video_id), headers=headers)
+    assert response.status_code == 200
+    assert response.json() == {"message":"Video eliminado exitosamente", "video_id": video_id}
+    assert get_video_id(task_id) == 0
+    delete_user(signup_body["email"])
+
+"""def test_delete_video_400():
+    pass"""
+
+def test_delete_video_401():
+    video_id = random.randint(1,999)
+    response = client.delete("api/videos/"+str(video_id))
+    assert response.status_code == 401
+    assert response.json() == auth_error
+
+def test_delete_video_403():
+    user1_signup_body = signup()
+    user1_token = login(user1_signup_body)
+    user1_headers = get_headers(user1_token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=user1_headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    user2_signup_body = signup()
+    user2_token = login(user2_signup_body)
+    user2_headers = get_headers(user2_token)
+    response = client.delete("api/videos/"+str(video_id), headers=user2_headers)
+    assert response.status_code == 403
+    assert response.json() == {"detail":"No tienes permiso para eliminar este video"}
+    delete_video(task_id)
+    delete_user(user1_signup_body["email"])
+    delete_user(user2_signup_body["email"])
+
+def test_delete_video_404():
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    delete_video(task_id)
+    response = client.delete("api/videos/"+str(video_id), headers=headers)
+    assert response.status_code == 404
+    assert response.json() == video_404_error
+    delete_user(signup_body["email"])
 
 # Pruebas de votacion
 def test_vote_video_200():
@@ -255,13 +359,13 @@ def test_vote_video_404():
     invalid_video_id = 999999
     response = client.post(f"/api/public/videos/{invalid_video_id}/vote", headers=headers)
     assert response.status_code == 404
-    assert response.json() == {"detail": "Video no encontrado"}
+    assert response.json() == video_404_error
     delete_user(signup_body["email"])
 
 def test_vote_video_401():
     response = client.post("/api/public/videos/1/vote")
     assert response.status_code == 401
-    assert response.json() == {"detail": "Falta de autenticación."}
+    assert response.json() == auth_error
 
 # Pruebas de ranking
 def test_get_ranking_200():
@@ -382,7 +486,7 @@ def get_video_id(task_id: str):
     try:
         video = db.query(models.Video).filter_by(task_id=task_id).first()
         if not video:
-            pass
+            return 0
         else:
             video_id = video.video_id 
             return video_id  

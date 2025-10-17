@@ -137,6 +137,8 @@ def get_videos_uploaded(
         "total": len(videos_response)
     }
 
+video_not_found_error = "El video con el video_id especificado no existe"
+
 # 3. Consultar detalle de un video especifico
 @app.get("/api/videos/{video_id}")
 def get_video(
@@ -154,7 +156,7 @@ def get_video(
     if not video:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Video no encontrado"
+            detail=video_not_found_error
         )
     
     # Luego verificar si pertenece al usuario actual
@@ -198,7 +200,7 @@ def delete_video(
     if not video:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Video no encontrado"
+            detail=video_not_found_error
         )
     
     # Luego verificar si pertenece al usuario actual
@@ -280,7 +282,7 @@ def vote_video(video_id: int, db: db_dependency, current_user: models.User = Dep
     if not video:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Video no encontrado"
+            detail=video_not_found_error
         )
 
     # Verificar si el usuario ya votó por este video
@@ -432,7 +434,7 @@ def verify_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token expirado"
         )
-    except jwt.JWTError:
+    except jwt.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido"
