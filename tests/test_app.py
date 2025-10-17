@@ -194,20 +194,10 @@ def test_get_video_200():
     delete_user(signup_body["email"])
 
 def test_get_video_401():
-    signup_body = signup()
-    token = login(signup_body)
-    headers = get_headers(token)
-    upload_body = generate_video_body("valid")
-    data = upload_body[0]
-    files = upload_body[1]
-    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = random.randint(1,999)
     response = client.get("api/videos/"+str(video_id))
     assert response.status_code == 401
     assert response.json() == auth_error
-    delete_video(task_id)
-    delete_user(signup_body["email"])
 
 def test_get_video_403():
     user1_signup_body = signup()
