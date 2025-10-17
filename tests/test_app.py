@@ -1,6 +1,9 @@
 from fastapi.testclient import TestClient
 from faker import Faker
 from main import app
+from database import SessionLocal
+from sqlalchemy import delete
+import models
 import random
 
 client = TestClient(app)
@@ -18,6 +21,8 @@ def test_signup_201():
     response = client.post("/api/auth/signup", json=body)
     assert response.status_code == 201
     assert response.json() == {"message": "Usuario creado exitosamente.", "user": user}
+    delete_user(body["email"])
+
 
 signup_400_error = {"detail": "Error de validación (email duplicado, contraseñas no coinciden)."}
 
@@ -42,6 +47,7 @@ def test_login_200():
     assert response.json()["token_type"] is not None
     assert response.json()["token_type"] == "Bearer"
     assert response.json()["expires_in"] == 3600
+    delete_user(signup_body["email"])
 
 login_401_error = {"detail": "Credenciales inválidas."}
 
@@ -66,6 +72,7 @@ def test_login_401_invalid_password():
     response = client.post("/api/auth/login", json = body)
     assert response.status_code == 401
     assert response.json() == login_401_error
+    delete_user(signup_body["email"])
 
 # Pruebas de gestion de videos
 def test_upload_video_201():
@@ -191,3 +198,15 @@ def generate_video_body(type: str):
     data = {"title": title}
     files = {"video_file": (video_name, open(video_path, "rb"), "video/"+video_type)}
     return data, files
+
+def delete_user(email: str):
+    db = SessionLocal()
+    try:
+        user = db.query(models.User).filter_by(email=email).first()
+        if not user:
+            pass
+        else:
+            db.delete(user)
+            db.commit()    
+    finally:
+        db.close()
