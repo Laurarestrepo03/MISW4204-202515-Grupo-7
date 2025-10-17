@@ -76,7 +76,9 @@ def test_login_401_invalid_password():
 
 # Pruebas de gestion de videos
 def test_upload_video_201():
-    headers = get_headers()
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
     upload_body = generate_video_body("valid")
     data = upload_body[0]
     files = upload_body[1]
@@ -96,7 +98,9 @@ def test_upload_video_401():
 upload_400_hundred_error = "Error en el archivo (tipo, duración o tamaño inválido)."
 
 def test_upload_video_400_invalid_type():
-    headers = get_headers()
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
     upload_body = generate_video_body("wrong_type")
     data = upload_body[0]
     files = upload_body[1]
@@ -105,7 +109,9 @@ def test_upload_video_400_invalid_type():
     assert response.json()["message"] == upload_400_hundred_error
 
 def test_upload_video_400_invalid_duration():
-    headers = get_headers()
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
     upload_body = generate_video_body("wrong_duration")
     data = upload_body[0]
     files = upload_body[1]
@@ -114,7 +120,9 @@ def test_upload_video_400_invalid_duration():
     assert response.json()["message"] == upload_400_hundred_error
 
 def test_upload_video_400_invalid_size():
-    headers = get_headers()
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
     upload_body = generate_video_body("wrong_size")
     data = upload_body[0]
     files = upload_body[1]
@@ -160,11 +168,13 @@ def signup():
     client.post("/api/auth/signup", json=body)
     return body
 
-def get_headers(): 
-    signup_body = signup()
-    login_body = {"email": signup_body["email"], "password": signup_body["password1"]}
+def login(body: dict):
+    login_body = {"email": body["email"], "password": body["password1"]}
     response = client.post("/api/auth/login", json = login_body)
     token = response.json()["access_token"]
+    return token
+
+def get_headers(token: str): 
     headers = {"Authorization": f"Bearer {token}"}
     return headers
 
