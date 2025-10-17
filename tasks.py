@@ -1,6 +1,6 @@
 from celery import Celery
 from moviepy import *
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 import models
 from database import SessionLocal
@@ -39,7 +39,7 @@ def process_video(video_path: str, title: str, video_id: int):
 
     processed_url = "https://anb.com/videos/processed/"+title.replace(" ", "_")+".mp4"
 
-    update_uploaded_info(video_id, datetime.now(), processed_url)
+    update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
@@ -54,5 +54,3 @@ def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: s
             db.commit()    
     finally:
         db.close()
-
-

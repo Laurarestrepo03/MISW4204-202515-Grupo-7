@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, EmailStr, Field, field_validator, ConfigDict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from sqlalchemy.orm import Session
 import jwt
@@ -47,7 +47,10 @@ class UserRegister(BaseModel):
     @classmethod
     def passwords_match(cls, v, info):
         if 'password1' in info.data and v != info.data['password1']:
-            raise ValueError('Las contraseñas no coinciden')
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Error de validación (email duplicado, contraseñas no coinciden)."
+            )
         return v
 
 
@@ -100,9 +103,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     """Crea un JWT token"""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
@@ -136,7 +139,7 @@ def get_current_user(
     if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Not authenticated",
+            detail="Falta de autenticación.",
             headers={"WWW-Authenticate": "Bearer"},
         )
     

@@ -1,7 +1,6 @@
 import os
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,8 +14,6 @@ POSTGRES_PORT = os.getenv('POSTGRES_PORT', '5432')
 
 # Construir URL de la base de datos
 URL_DATABASE = f'postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
-
-print(URL_DATABASE)
 
 engine = create_engine(URL_DATABASE)
 

@@ -1,7 +1,7 @@
-from fastapi import FastAPI, UploadFile, Form, status, Depends, HTTPException
+from fastapi import FastAPI, UploadFile, Form, File, status, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from moviepy import *
 from typing import Annotated
 from pathlib import Path
@@ -29,7 +29,7 @@ class VideoResponse(BaseModel):
     processed_url: str | None
     votes: int
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 @app.get("/")
@@ -48,7 +48,7 @@ db_dependency = Annotated[Session, Depends(get_db)]
 # 1. Carga de video 
 @app.post("/api/videos/upload")
 def upload_video(
-    video_file: Annotated[UploadFile, Form()], 
+    video_file: Annotated[UploadFile, File()], 
     title: Annotated[str, Form()], 
     db: db_dependency,
     current_user: models.User = Depends(auth.get_current_user)
@@ -77,7 +77,7 @@ def upload_video(
             video.close()
             os.remove(video_path)
             return four_hundred_error
-        video_id = add_uploaded_video(title, datetime.now(), current_user.user_id, db)
+        video_id = add_uploaded_video(title, datetime.now(timezone.utc), current_user.user_id, db)
         result = process_video.delay(video_path, title, video_id)
         add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
@@ -299,7 +299,7 @@ def vote_video(video_id: int, db: db_dependency, current_user: models.User = Dep
         )
 
     # Realizar voto por el video
-    db_vote = models.Vote(video_id=video_id, user_id=current_user.user_id, created_at=datetime.now())
+    db_vote = models.Vote(video_id=video_id, user_id=current_user.user_id, created_at=datetime.now(timezone.utc))
     db.add(db_vote)
     video.votes += 1
     db.commit()
@@ -327,12 +327,8 @@ def register_user(user: auth.UserRegister, db: db_dependency):
         )
     
     # Validación de contraseñas (ya se hace en el modelo, pero por seguridad)
-    if user.password1 != user.password2:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Error de validación (email duplicado, contraseñas no coinciden)."
-        )
-    
+    # Se hace en auth.py 
+
     # Hash de la contraseña
     hashed_password = auth.hash_password(user.password1)
     
@@ -344,7 +340,7 @@ def register_user(user: auth.UserRegister, db: db_dependency):
         hashed_password=hashed_password,
         city=user.city,
         country=user.country,
-        created_at=datetime.utcnow()
+        created_at=datetime.now(timezone.utc)
     )
     
     db.add(db_user)
