@@ -32,6 +32,7 @@ def test_signup_400_invalid_email():
     response = client.post("/api/auth/signup", json=body)
     assert response.status_code == 400
     assert response.json() == signup_400_error
+    delete_user(body["email"])
 
 def test_signup_400_invalid_password():
     body = generate_signup_body(valid_password=False)
@@ -86,6 +87,8 @@ def test_upload_video_201():
     assert response.status_code == 201
     assert response.json()["message"] == "Video subido correctamente. Procesamiento en curso"
     assert response.json()["task_id"] is not None
+    delete_video(response.json()["task_id"])
+    delete_user(signup_body["email"])
 
 def test_upload_video_401():
     upload_body = generate_video_body("valid")
@@ -107,6 +110,8 @@ def test_upload_video_400_invalid_type():
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
     assert response.json()["message"] == upload_400_hundred_error
+    delete_user(signup_body["email"])
+
 
 def test_upload_video_400_invalid_duration():
     signup_body = signup()
@@ -118,6 +123,8 @@ def test_upload_video_400_invalid_duration():
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
     assert response.json()["message"] == upload_400_hundred_error
+    delete_user(signup_body["email"])
+
 
 def test_upload_video_400_invalid_size():
     signup_body = signup()
@@ -129,6 +136,8 @@ def test_upload_video_400_invalid_size():
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
     assert response.json()["message"] == upload_400_hundred_error
+    delete_user(signup_body["email"])
+
 
 # Pruebas de votacion
 
@@ -217,6 +226,18 @@ def delete_user(email: str):
             pass
         else:
             db.delete(user)
+            db.commit()    
+    finally:
+        db.close()
+
+def delete_video(task_id: str):
+    db = SessionLocal()
+    try:
+        video = db.query(models.Video).filter_by(task_id=task_id).first()
+        if not video:
+            pass
+        else:
+            db.delete(video)
             db.commit()    
     finally:
         db.close()
