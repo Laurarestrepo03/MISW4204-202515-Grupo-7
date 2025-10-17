@@ -19,6 +19,21 @@ def test_signup_201():
     assert response.status_code == 201
     assert response.json() == {"message": "Usuario creado exitosamente.", "user": user}
 
+signup_400_error = {"detail": "Error de validación (email duplicado, contraseñas no coinciden)."}
+
+def test_signup_400_invalid_email():
+    body = generate_signup_body()
+    client.post("/api/auth/signup", json=body)
+    response = client.post("/api/auth/signup", json=body)
+    assert response.status_code == 400
+    assert response.json() == signup_400_error
+
+def test_signup_400_invalid_password():
+    body = generate_signup_body(valid_password=False)
+    response = client.post("/api/auth/signup", json=body)
+    assert response.status_code == 400
+    assert response.json() == signup_400_error
+    
 def test_login_200():
     signup_body = signup()
     body = {"email": signup_body["email"], "password": signup_body["password1"]}
@@ -28,6 +43,29 @@ def test_login_200():
     assert response.json()["token_type"] == "Bearer"
     assert response.json()["expires_in"] == 3600
 
+login_401_error = {"detail": "Credenciales inválidas."}
+
+def test_login_401_invalid_email():
+    invalid_email = faker.email()
+    password = faker.word()
+    password = regenerate_password(password)
+    body = {"email": invalid_email, "password": password}
+    response = client.post("/api/auth/login", json = body)
+    assert response.status_code == 401
+    assert response.json() == login_401_error
+
+def test_login_401_invalid_password():
+    signup_body = signup()
+    valid_password = signup_body["password1"]
+    invalid_password = faker.word()
+    invalid_password = regenerate_password(invalid_password)
+    while invalid_password == valid_password:
+        invalid_password = faker.word()
+        invalid_password = regenerate_password(invalid_password)
+    body = {"email": signup_body["email"], "password": invalid_password} 
+    response = client.post("/api/auth/login", json = body)
+    assert response.status_code == 401
+    assert response.json() == login_401_error
 
 # Pruebas de gestion de videos
 def test_upload_video_201():
@@ -48,7 +86,7 @@ def test_upload_video_401():
     assert response.status_code == 401
     assert response.json() == {"detail": "Falta de autenticación."}
 
-four_hundred_error = "Error en el archivo (tipo o tamaño inválido)."
+upload_400_hundred_error = "Error en el archivo (tipo, duración o tamaño inválido)."
 
 def test_upload_video_400_invalid_type():
     headers = get_headers()
@@ -57,7 +95,7 @@ def test_upload_video_400_invalid_type():
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
-    assert response.json()["message"] == four_hundred_error
+    assert response.json()["message"] == upload_400_hundred_error
 
 def test_upload_video_400_invalid_duration():
     headers = get_headers()
@@ -66,7 +104,7 @@ def test_upload_video_400_invalid_duration():
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
-    assert response.json()["message"] == "El video no tiene una duración entre los 20 y 60 segundos."
+    assert response.json()["message"] == upload_400_hundred_error
 
 def test_upload_video_400_invalid_size():
     headers = get_headers()
@@ -75,27 +113,40 @@ def test_upload_video_400_invalid_size():
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
     assert response.status_code == 400
-    assert response.json()["message"] == four_hundred_error
+    assert response.json()["message"] == upload_400_hundred_error
 
 # Pruebas de votacion
 
 # Pruebas de ranking
 
 # Funciones auxiliares
-def generate_signup_body():
+def generate_signup_body(valid_password=True):
     first_name = faker.first_name()
     last_name = faker.last_name()
     email = faker.email()
     password = faker.word()
+    password = regenerate_password(password)
+    password1 = password
+    if valid_password:
+        password2 = password
+    else:
+        password2 = faker.word()
+        password2 = regenerate_password(password2)
+        while password2 == password1:
+            password2 = faker.word()
+            password2 = regenerate_password(password2)
+    city = faker.city()
+    country = faker.country()
+    body = {"first_name": first_name, "last_name": last_name, "email": email, "password1": password1, "password2": password2, "city": city, "country": country}
+    return body
+
+def regenerate_password(password: str):
     if len(password) < 8:
         while len(password) < 8:
             password += password
     elif len(password) > 72:
         password = password[:71]
-    city = faker.city()
-    country = faker.country()
-    body = {"first_name": first_name, "last_name": last_name, "email": email, "password1": password, "password2": password, "city": city, "country": country}
-    return body
+    return password
     
 def signup():
     body = generate_signup_body()

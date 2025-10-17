@@ -55,7 +55,7 @@ def upload_video(
 ):
     
     four_hundred_error = JSONResponse(status_code = status.HTTP_400_BAD_REQUEST, 
-                            content = {"message": "Error en el archivo (tipo o tamaño inválido)."})
+                            content = {"message": "Error en el archivo (tipo, duración o tamaño inválido)."})
 
     if video_file.content_type != "video/mp4":
         return four_hundred_error

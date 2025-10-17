@@ -1,2 +1,2 @@
 - como correr pruebas
-- 
+- hay que manualmente agregar un archivo large size de mas de 100mb para la prueba correspondiente
