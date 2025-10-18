@@ -544,3 +544,14 @@ def test_update_uploaded_info_video_not_found():
         assert video is None  # El video no debe existir
     finally:
         db.close()
+
+def test_process_video():
+    from tasks import process_video
+    try:
+        video_path = "assets/Michael Jordan.mp4"
+        title = "Michael Jordan"
+        video_id = 999999
+        result = process_video.delay(video_path, title, video_id)
+        assert result.id != ""
+    except:
+        assert result == "Failiure"

@@ -10,7 +10,7 @@ celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://l
 @celery_app.task(default_retry_delay=5, max_retries=3)
 def process_video(video_path: str, title: str, video_id: int):
     try:
-        #TypeError("Forced error") -> Descomentar esta linea para forzar un error
+        #raise TypeError("Forced error") # -> Descomentar esta linea para forzar un error
         # Crear carpeta processed_videos si no existe
         processed_dir = Path("processed_videos")
         processed_dir.mkdir(parents=True, exist_ok=True)
@@ -42,8 +42,9 @@ def process_video(video_path: str, title: str, video_id: int):
         processed_url = "https://anb.com/videos/processed/"+title.replace(" ", "_")+".mp4"
 
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
-    except:
+    except Exception:
         process_video.retry()
+        return "Failuire"
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
