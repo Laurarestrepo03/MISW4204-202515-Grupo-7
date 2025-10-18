@@ -89,6 +89,7 @@ def test_upload_video_201():
     assert response.status_code == 201
     assert response.json()["message"] == "Video subido correctamente. Procesamiento en curso"
     assert response.json()["task_id"] is not None
+    assert response.json()["video_id"] is not None
     delete_video(response.json()["task_id"])
     delete_user(signup_body["email"])
 

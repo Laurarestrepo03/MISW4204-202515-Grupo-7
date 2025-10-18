@@ -83,7 +83,7 @@ def upload_video(
         add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
-                            "task_id": result.id}) 
+                            "task_id": result.id, "video_id": video_id}) 
     except Exception as e:
         return JSONResponse(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
@@ -120,7 +120,7 @@ def get_videos_uploaded(
     
     videos_response = []
     for video in videos:
-        videos_response.append({
+        video_dict = {
             "video_id": video.video_id,
             "title": video.title,
             "status": video.status.value,
@@ -129,7 +129,13 @@ def get_videos_uploaded(
             "original_url": video.original_url,
             "processed_url": video.processed_url,
             "votes": video.votes
-        })
+        }
+
+        if video_dict["processed_at"] is None: 
+            del video_dict["processed_at"]
+            del video_dict["processed_url"] 
+
+        videos_response.append(video_dict)
     
     return {
         "videos": videos_response,
@@ -165,7 +171,7 @@ def get_video(
             detail="No tienes permiso para acceder a este video"
         )
     
-    return {
+    video_dict = {
         "video_id": video.video_id,
         "title": video.title,
         "status": video.status.value,
@@ -179,6 +185,12 @@ def get_video(
             "name": f"{current_user.first_name} {current_user.last_name}"
         }
     }
+
+    if video_dict["processed_at"] is None: 
+        del video_dict["processed_at"]
+        del video_dict["processed_url"]
+
+    return video_dict
 
 # 4. Eliminar video subido
 @app.delete("/api/videos/{video_id}")
