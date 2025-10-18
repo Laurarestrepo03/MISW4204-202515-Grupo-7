@@ -45,4 +45,4 @@ GUIA_SONARQUBE.md
 GUIA_CAPTURAS_SONARQUBE.md
 subir_sonarqube.sh
 ejecutar_sonarqube.sh
-.github/workflows/sonarqube.yml
+
