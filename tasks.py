@@ -5,7 +5,7 @@ from pathlib import Path
 import models
 from database import SessionLocal
 
-celery_app = Celery("tasks", broker="redis://localhost:6379")
+celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
 
 @celery_app.task
 def process_video(video_path: str, title: str, video_id: int):

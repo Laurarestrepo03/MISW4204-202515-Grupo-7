@@ -2,9 +2,9 @@ from fastapi.testclient import TestClient
 from faker import Faker
 from main import app
 from database import SessionLocal
-from sqlalchemy import delete
 import models
 import random
+from tasks import celery_app
 
 client = TestClient(app)
 faker = Faker()
@@ -251,8 +251,22 @@ def test_delete_video_200():
     assert get_video_id(task_id) == 0
     delete_user(signup_body["email"])
 
-"""def test_delete_video_400():
-    pass"""
+def test_delete_video_400():
+    signup_body = signup()
+    token = login(signup_body)
+    headers = get_headers(token)
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    task_id = upload_response.json()["task_id"]
+    video_id = get_video_id(task_id)
+    update_votes(video_id)
+    response = client.delete("api/videos/"+str(video_id), headers=headers)
+    assert response.status_code == 400
+    assert response.json() == {"detail":"El video no puede ser eliminado porque ya fue habilitado para votación"}
+    delete_video(task_id)
+    delete_user(signup_body["email"])
 
 def test_delete_video_401():
     video_id = random.randint(1,999)
@@ -417,7 +431,7 @@ def get_headers(token: str):
     return headers
 
 def generate_video_body(type: str):
-    title = faker.sentence()
+    title = faker.sentence().replace(".", "")
     rand_video = random.randint(1,2)
     video_type = "mp4"
 
@@ -444,8 +458,9 @@ def generate_video_body(type: str):
     video_path = "assets/" + video_name
 
     data = {"title": title}
-    files = {"video_file": (video_name, open(video_path, "rb"), "video/"+video_type)}
-    return data, files
+    file_object = open(video_path, "rb")
+    files = {"video_file": (video_name, file_object, "video/"+video_type)}
+    return data, files, video_name, file_object
 
 def delete_user(email: str):
     db = SessionLocal()
@@ -466,6 +481,7 @@ def delete_video(task_id: str):
         if not video:
             pass
         else:
+            celery_app.control.revoke(task_id, terminate=True)
             db.delete(video)
             db.commit()    
     finally:
@@ -494,5 +510,17 @@ def delete_vote(video_id: int, email: str):
             if vote:
                 db.delete(vote)
                 db.commit()
+    finally:
+        db.close()
+
+def update_votes(video_id: int, add=True):
+    db = SessionLocal()
+    try:
+        video = db.get(models.Video, video_id)
+        if not video:
+            pass
+        else:
+            video.votes = 1
+            db.commit()
     finally:
         db.close()

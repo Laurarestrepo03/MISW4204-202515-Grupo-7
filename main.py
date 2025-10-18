@@ -180,8 +180,6 @@ def get_video(
             "name": f"{current_user.first_name} {current_user.last_name}"
         }
     }
-def get_video(video_id: int):
-    return None
 
 # 4. Eliminar video subido
 @app.delete("/api/videos/{video_id}")
@@ -226,8 +224,14 @@ def delete_video(
         pass
     
     # Eliminar registro de la BD
-    db.delete(video)
-    db.commit()
+    if video.votes > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="El video no puede ser eliminado porque ya fue habilitado para votación"
+        )
+    else:
+        db.delete(video)
+        db.commit()
     
     return {
         "message": "Video eliminado exitosamente",
