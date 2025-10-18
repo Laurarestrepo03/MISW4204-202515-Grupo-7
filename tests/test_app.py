@@ -4,7 +4,6 @@ from main import app
 from database import SessionLocal
 import models
 import random
-from tasks import celery_app
 
 client = TestClient(app)
 faker = Faker()
