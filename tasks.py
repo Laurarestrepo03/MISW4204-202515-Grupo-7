@@ -44,7 +44,6 @@ def process_video(video_path: str, title: str, video_id: int):
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
-        return "Failuire"
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()

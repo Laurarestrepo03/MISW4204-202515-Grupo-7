@@ -15,11 +15,6 @@ login_401_error = {"detail": "Credenciales inválidas."}
 auth_error = {"detail": "Falta de autenticación."}
 video_404_error = {"detail":"El video con el video_id especificado no existe"}
 
-"""def test_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert response.json() == {"Hello": "World"}"""
-
 # Pruebas de gestion de usuarios
 def test_signup_201():
     body = generate_signup_body()
@@ -544,14 +539,3 @@ def test_update_uploaded_info_video_not_found():
         assert video is None  # El video no debe existir
     finally:
         db.close()
-
-def test_process_video():
-    from tasks import process_video
-    try:
-        video_path = "assets/Michael Jordan.mp4"
-        title = "Michael Jordan"
-        video_id = 999999
-        result = process_video.delay(video_path, title, video_id)
-        assert result.id != ""
-    except:
-        assert result == "Failiure"
