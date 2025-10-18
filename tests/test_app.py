@@ -524,3 +524,24 @@ def update_votes(video_id: int, add=True):
             db.commit()
     finally:
         db.close()
+
+# Test para cubrir el caso de update_uploaded_info con video inexistente
+def test_update_uploaded_info_video_not_found():
+    from tasks import update_uploaded_info
+    from datetime import datetime, timezone
+    
+    # Usar un video_id que definitivamente no existe
+    non_existent_video_id = 999999
+    processed_at = datetime.now(timezone.utc)
+    processed_url = "https://anb.com/videos/processed/test_video.mp4"
+    
+    # Esta función debe ejecutarse sin errores incluso si el video no existe
+    update_uploaded_info(non_existent_video_id, processed_at, processed_url)
+    
+    # Verificar que no se creó ningún video con ese ID
+    db = SessionLocal()
+    try:
+        video = db.get(models.Video, non_existent_video_id)
+        assert video is None  # El video no debe existir
+    finally:
+        db.close()

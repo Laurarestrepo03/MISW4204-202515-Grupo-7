@@ -1,5 +1,5 @@
 from celery import Celery
-from moviepy import *
+from moviepy import VideoFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips
 from datetime import datetime, timezone
 from pathlib import Path
 import models
@@ -46,11 +46,11 @@ def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: s
     try:
         video = db.get(models.Video, video_id)
         if not video:
-            pass
-        else:
-            video.status = models.VideoStatus.PROCESSED
-            video.processed_at = processed_at
-            video.processed_url = processed_url
-            db.commit()    
+            return
+        
+        video.status = models.VideoStatus.PROCESSED
+        video.processed_at = processed_at
+        video.processed_url = processed_url
+        db.commit()    
     finally:
         db.close()
