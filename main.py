@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, Form, File, status, Depends, HTTPExcept
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials
 from datetime import datetime, timedelta, timezone
-from moviepy import *
+from moviepy import VideoFileClip
 from typing import Annotated
 from pathlib import Path
 from database import engine, SessionLocal
@@ -63,13 +63,14 @@ def upload_video(
     # Se guarda el video original para procesarlo
     upload_dir = Path("original_videos")
     upload_dir.mkdir(parents=True, exist_ok=True)
-    filename = video_file.filename.replace(" ", "_")
-    file_location = upload_dir / filename
+    # Sanitizar el nombre del archivo para prevenir path traversal
+    safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
+    file_location = upload_dir / safe_filename
 
     try:
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
-        video_path = "original_videos/"+filename
+        video_path = "original_videos/"+safe_filename
         video = VideoFileClip(video_path)
         duration = video.duration
         file_size = os.path.getsize(video_path) / (1024*1024)
@@ -101,11 +102,9 @@ def add_uploaded_video(title: str, uploaded_at: datetime, user_id: int, db: db_d
 
 def add_task_id(video_id: int, task_id: int, db: db_dependency):
     video = db.get(models.Video, video_id)
-    if not video:
-        pass
-    else:
+    if video:
         video.task_id = task_id
-    db.commit()
+        db.commit()
 
 # 2. Consultar mis videos
 @app.get("/api/videos")
@@ -219,7 +218,7 @@ def delete_video(
         processed_path = f"processed_videos/{video.title}.mp4"
         if os.path.exists(processed_path):
             os.remove(processed_path)
-    except Exception as e:
+    except Exception:
         # Continuar aunque falle la eliminación de archivos
         pass
     

@@ -1,13 +1,32 @@
 .venv/
+venv/
 __pycache__/
+*.py[cod]
+*$py.class
 
 original_videos/*
 processed_videos/*
 
 .idea/
+.vscode/
 
 assets/Large size.mp4
 *.mp3
+
+# Archivos de cobertura y testing
+.coverage
+htmlcov/
+coverage.xml
+.pytest_cache/
+*.cover
+
+# Archivos de SonarQube
+.scannerwork/
+.sonar/
+
+# Archivos de entorno
+.env
+.env.local
 
 # Archivos de documentacion
 GUIA_POSTMAN.md
@@ -15,3 +34,15 @@ RESUMEN_FINAL.md
 GUIA_POSTGRESQL_DBEAVER.md
 CHECKLIST.md
 AUTENTICACION_README.md
+CONFIGURAR_SECRETS.md
+
+# Archivos de configuración de SonarQube (no subir)
+RESUMEN_SONARQUBE.md
+SONARQUBE.md
+TEMPLATE_REPORTE_SONARQUBE.md
+PASOS_FINALES.md
+GUIA_SONARQUBE.md
+GUIA_CAPTURAS_SONARQUBE.md
+subir_sonarqube.sh
+ejecutar_sonarqube.sh
+.github/workflows/sonarqube.yml
