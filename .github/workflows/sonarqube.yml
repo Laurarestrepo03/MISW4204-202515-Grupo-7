@@ -73,5 +73,5 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=MISW4204-2025-Grupo-7
+            -Dsonar.projectKey=MISW4204-202515-Grupo-7
             -Dsonar.organization=misw4204-202515-grupo-7
