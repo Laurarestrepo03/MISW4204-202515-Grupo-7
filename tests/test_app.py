@@ -481,7 +481,6 @@ def delete_video(task_id: str):
         if not video:
             pass
         else:
-            celery_app.control.revoke(task_id, terminate=True)
             db.delete(video)
             db.commit()    
     finally:
