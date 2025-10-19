@@ -54,4 +54,4 @@ celery -A tasks purge --force
 ```
 
 ## SonarQube
-El reporte de las pruebas de SonarQube se encuentra en [docs/sonarqube.md](https://www.github.com/Laurarestrepo03/MISW4204-202515-GRUPO-7/docs/sonarqube.md)
+El reporte de las pruebas de SonarQube se encuentra en [docs/Entrega_1/sonarqube.md](https://www.github.com/Laurarestrepo03/MISW4204-202515-GRUPO-7/docs/Entrega_1/sonarqube.md)
