@@ -40,4 +40,4 @@ uvicorn main:app --reload
 ```
 
 ### 7. Usar la Aplicación
-Para una demostración de cómo usar la aplicación, recomendamos ver el video en [sustentacion/Entrega_1.md](../../sustentacion/Entrega_1.md), minuto [00:00]().
+Para una demostración de cómo usar la aplicación, recomendamos ver el video en [sustentacion/Entrega_1.md](../../sustentacion/Entrega_1.md), minuto [06:25](https://www.youtube.com/watch?v=7nizCJ_sHsU&t=385s).
