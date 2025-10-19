@@ -46,3 +46,4 @@ Julián Felipe Daza Rendón | jf.dazar1@uniandes.edu.co
 Juan Camilo Hernández Saavedra | jc.hernandezs1@uniandes.edu.co
 Nicolás Javier Jaramillo Cely | nj.jaramillo@uniandes.edu.co
 Laura María Restrepo Palomino | l.restrepop@uniandes.edu.co
+
