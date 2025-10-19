@@ -8,7 +8,7 @@ python -m venv venv
 ### 2. Activar el Ambiente Virtual
 **En Windows:**
 ```bash
-source venv\Scripts\activate
+source venv/Scripts/activate
 ```
 
 **En Linux/Mac:**
