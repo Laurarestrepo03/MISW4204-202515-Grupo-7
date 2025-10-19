@@ -1,7 +1,7 @@
 ## 👨‍🚀 Pruebas Postman
 Antes de ejecutar las pruebas de Postman, se recomienda ver la documentación en línea:
 
-**https://documenter.getpostman.com/view/17535481/2sB3QQK85n**
+**https://documenter.getpostman.com/view/17535481/2sB3QQK85r**
 
 o importar localmente el archivo de la [colección ANB_Tests](../../collections/ANB_Tests.postman_collection.json) en Postman.
 
@@ -50,7 +50,7 @@ Verifique que haya descargado la carpeta [assets](../../assets) de este mismo re
 
 Si va a ejecutar las pruebas manualmente en Postman, es decir, si no va a seguir los pasos 8 a 10, es necesario que vaya a las pruebas que inician con el nombre "Subir video" y subir los archivos a su nube de Postman. Esto se puede hacer dando click en el ícono de nube al lado del archivo de video:
 
-<a href=""> </a>
+<a href="https://github.com/user-attachments/assets/d43535c5-7552-4e70-93b8-30bcbd015411"> <img width="833" height="142" alt="Subir pruebas a la nube" src="https://github.com/user-attachments/assets/d43535c5-7552-4e70-93b8-30bcbd015411" /> </a>
 
 ### 8. Asegurarse de Tener Newman Instalado
 En una nueva terminal:
@@ -61,17 +61,15 @@ Si no lo ha instalado, puede ejecutar este comando:
 ```bash
 npm install -g newman
 ```
-
 ### 9. Correr las Pruebas
 En una nueva terminal:
 ```bash
  newman run collections/ANB_Tests.postman_collection.json
 ```
-
 ### 10. Observar los Resultados
 Una vez se hayan terminado de ejcutar las pruebas, debería observar el siguiente resultado en la terminal:
 
-<a href="">  </a>
+<a href="https://github.com/user-attachments/assets/dadb0ac3-6610-4f4d-a492-6be03a3806d4"> <img width="470" height="323" alt="Pruebas Postman ejecutadas" src="https://github.com/user-attachments/assets/dadb0ac3-6610-4f4d-a492-6be03a3806d4" /> </a>
 
 Es importante notar que si se corren las pruebas más de una vez, a menos que se eliminen los usuarios correspondientes de la base de datos, las primeras dos pruebas de registro van a fallar, pues estas suponen que los usuarios no existen.
 
