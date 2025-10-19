@@ -46,6 +46,7 @@ pytest
 ### 8. Observar los Resultados
 Una vez se hayan terminado de ejcutar las pruebas, debería observar el siguiente resultado en la terminal:
 
+<a href="https://github.com/user-attachments/assets/83f7f8f8-aaad-48a9-b202-e9d6af8b5749"> <img width="1327" height="151" alt="image" src="https://github.com/user-attachments/assets/83f7f8f8-aaad-48a9-b202-e9d6af8b5749" /> </a>
 
 ### 9. Borrar las tareas pendientes de Celery
 Por último, se deben borrar las tareas encoladas en Celery que se crearon durante las pruebas:
