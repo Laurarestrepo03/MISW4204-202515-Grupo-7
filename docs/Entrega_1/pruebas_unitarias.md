@@ -1,4 +1,4 @@
-## 🧪 Ejecución de las Pruebas Unitarias
+## 🧪 Pruebas Unitarias
 Para ejecutar las pruebas unitarias destinadas a probar el funcionamiento del API, se deben ejecutar los siguientes pasos:
 
 Nota: si ya he hecho las instalaciones previas, salte al [paso 5](#5-iniciar-la-aplicación-uvicorn), y si ya está ejecutando la aplicación, salte al [paso 6](#6-parar-el-servicio-de-celery).

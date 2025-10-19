@@ -87,14 +87,6 @@ def test_upload_video_201():
     delete_video(response.json()["task_id"])
     delete_user(signup_body["email"])
 
-def test_upload_video_401():
-    upload_body = generate_video_body("valid")
-    data = upload_body[0]
-    files = upload_body[1]
-    response = client.post("/api/videos/upload", data=data, files=files)
-    assert response.status_code == 401
-    assert response.json() == auth_error
-
 def test_upload_video_400_invalid_type():
     signup_body = signup()
     token = login(signup_body)
@@ -119,6 +111,13 @@ def test_upload_video_400_invalid_duration():
     assert response.json()["message"] == upload_400_hundred_error
     delete_user(signup_body["email"])
 
+def test_upload_video_401():
+    upload_body = generate_video_body("valid")
+    data = upload_body[0]
+    files = upload_body[1]
+    response = client.post("/api/videos/upload", data=data, files=files)
+    assert response.status_code == 401
+    assert response.json() == auth_error
 
 # def test_upload_video_400_invalid_size():
 #     signup_body = signup()
@@ -351,6 +350,11 @@ def test_vote_video_400():
     delete_user(signup_body["email"])
     delete_user(signup_body2["email"])
 
+def test_vote_video_401():
+    response = client.post("/api/public/videos/1/vote")
+    assert response.status_code == 401
+    assert response.json() == auth_error
+
 def test_vote_video_404():
     signup_body = signup()
     token = login(signup_body)
@@ -360,11 +364,6 @@ def test_vote_video_404():
     assert response.status_code == 404
     assert response.json() == video_404_error
     delete_user(signup_body["email"])
-
-def test_vote_video_401():
-    response = client.post("/api/public/videos/1/vote")
-    assert response.status_code == 401
-    assert response.json() == auth_error
 
 # Pruebas de ranking
 def test_get_ranking_200():
