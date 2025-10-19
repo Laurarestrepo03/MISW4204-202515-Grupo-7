@@ -11,7 +11,12 @@ Laura María Restrepo Palomino | l.restrepop@uniandes.edu.co
 ## Documentación y Contenido del Repositorio
 La documentación relevante a la entrega 1, y otro contenido de interés puede ser accedido mediante los siguientes enlaces:
 - [Documentación](docs/Entrega_1/)
-- [Sustentación](sustacion/Entrega_1)
+    - [Ejecución de la aplicación](docs/Entrega_1/intrucciones_despliegue.md)
+    - [Documentación Postman](docs/Entrega_1/pruebas_postman.md)
+    - [Diagramas y modelos](docs/Entrega_1/diagramas.md)
+    - [Pruebas unitarias](docs/Entrega_1/pruebas_unitarias.md)
+    - [Reporte SonarQube](docs/Entrega_1/sonarqube.md)
+- [Sustentación (video)](sustacion/Entrega_1)
 - [Plan de pruebas](capacity_planning/plan_de_pruebas.md)
 - [Colección Postman](collections/)
 
