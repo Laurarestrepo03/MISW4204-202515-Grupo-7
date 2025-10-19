@@ -1,7 +1,7 @@
 ## 🧪 Pruebas Unitarias
 Para ejecutar las pruebas unitarias destinadas a probar el funcionamiento del API, se deben ejecutar los siguientes pasos:
 
-Nota: si ya he hecho las instalaciones previas, salte al [paso 5](#5-iniciar-la-aplicación-uvicorn), y si ya está ejecutando la aplicación, salte al [paso 6](#6-parar-el-servicio-de-celery).
+Nota: si ya ha hecho las instalaciones previas, salte al [paso 5](#5-iniciar-la-aplicación-uvicorn), y si ya está ejecutando la aplicación, salte al [paso 6](#6-parar-el-servicio-de-celery).
 
 ### 1. Crear el Ambiente Virtual
 ```bash
@@ -11,7 +11,7 @@ python -m venv venv
 ### 2. Activar el Ambiente Virtual
 **En Windows:**
 ```bash
-venv\Scripts\activate
+source venv\Scripts\activate
 ```
 
 **En Linux/Mac:**
@@ -36,6 +36,8 @@ uvicorn main:app --reload
 
 ### 6. Parar el Servicio de Celery
 Si tiene uno o varios servicios de Celery corriendo, termínelos **todos** en la terminal donde se estén ejecutando. Esto lo puede hacer con `ctrl+C` en Windows o `cmd+C` en Mac.
+
+Esto se hace con el fin de no procesar los videos subidos (12) durante las pruebas, puesto que pueden tardar un rato y ocupar el worker si se llega a necesitar de verdad. Si no le molesta y sí los quiere procesar, ignore este paso.
 
 ### 7. Correr las Pruebas
 En una nueva terminal:
