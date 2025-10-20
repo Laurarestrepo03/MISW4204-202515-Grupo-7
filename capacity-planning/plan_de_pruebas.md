@@ -36,7 +36,7 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * Se crearon 3 treads de usuarios en JMeter, cada uno enviando peticiones de subida de video de aproximadamente 8MB de tamaño; de acuerdo a cada escenario de prueba.
 * El archivo plantilla en Jmeter se encuentra en el repositorio en la ruta: [capacity_planning/HTTP_Request_cargar_videos.jmx](HTTP_Request_cargar_videos.jmx)
 * Los archivos con los resultados de las pruebas se encuentran en la carpeta [results](results/)
-* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 100 usuarios concurrentes sin presentar degradación. El 97% de las peticiones presentaron respuesta exitosa y una latencia de 1000ms.
+* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 100 usuarios concurrentes en un periodo de tiempo de 3 minutos sin presentar degradación. El 97% de las peticiones presentaron respuesta exitosa y una latencia menor a los 1000ms.
 * A partir de 150 usuarios, se empiezan a observar errores 500 en las respuestas, y la latencia de las peticiones empieza a aumentar hasta llegar a un punto máximo de 30 segundos.
 * A partir de esto se determina que el valor de RPS (Request per second) es de aproximadamente 0.6.
 * A partir de los logs del aplicativo, se encontró que el cuello de botella es la base de datos. Se está alcanzando el límite de conexiones rapidamente, lo que tumba la conexión entre el aplicativo y la base de datos, dejando el sistema inutilizable hasta que este se reinicie.
