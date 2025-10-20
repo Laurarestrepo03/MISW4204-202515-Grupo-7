@@ -27,7 +27,7 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * Observabilidad: Prometheus/Grafana
 
 ### Salidas esperadas
-* Curva usuarios→latencia/errores.
+* Curva usuarios→latencia/errores/exitos.
 * RPS sostenido a capacidad máxima.
 * Bottlenecks con evidencias.
 
@@ -37,4 +37,30 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * El archivo plantilla en Jmeter se encuentra en el repositorio en la ruta: `capacity_planning/HTTP_Request_cargar_videos.jmx`
 * Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 100 usuarios concurrentes sin presentar degradación. El 97% de las peticiones presentaron respuesta exitosa y una latencia de 1000ms.
 * A partir de 150 usuarios, se empiezan a observar errores 500 en las respuestas, y la latencia de las peticiones empieza a aumentar hasta llegar a un punto máximo de 30 segundos.
+* A partir de esto se determina que el valor de RPS (Request per second) es de aproximadamente 0.6.
+* A partir de los logs del aplicativo, se encontró que el cuello de botella es la base de datos. Se está alcanzando el límite de conexiones rapidamente, lo que tumba la conexión entre el aplicativo y la base de datos, dejando el sistema inutilizable hasta que este se reinicie.
 * A continuación se presentan los gráficos de la ejecución de la prueba.
+
+### 100 usuarios
+** Peticiones exitosas (verde) y peticiones fallidas (rojo)
+<img width="1307" height="735" alt="image" src="https://github.com/user-attachments/assets/249573f0-f7ba-4057-9fee-850fd4500838" />
+** Latencia
+<img width="1287" height="567" alt="image" src="https://github.com/user-attachments/assets/cec448b9-248c-4a9c-b38e-d8b1791823da" />
+
+### 150 usuarios
+** Peticiones exitosas (verde) y peticiones fallidas (rojo)
+<img width="1306" height="735" alt="image" src="https://github.com/user-attachments/assets/462e1b95-bbc4-423d-96d1-e20678d284dc" />
+
+** Latencia
+<img width="1286" height="567" alt="image" src="https://github.com/user-attachments/assets/9aae1ddd-0783-40d6-b140-3d1cc8e0014a" />
+
+### 200 usuarios
+** Peticiones exitosas (verde) y peticiones fallidas (rojo)
+<img width="1307" height="735" alt="image" src="https://github.com/user-attachments/assets/84a112d9-b454-4def-8b21-c2def0f3713e" />
+
+** Latencia
+<img width="1287" height="567" alt="image" src="https://github.com/user-attachments/assets/0c5d4079-7d5b-4539-ad59-a69d932bb9d8" />
+
+## Recomendaciones para escalar la solución
+* Aumentar la capacidad del contenedor donde se aloja la base de datos, para aumentar el tiempo de procesamiento de cada solucitud y aumentar la disponibilidad del pool de conexiones.
+* Utilizar una solución de caché en busquedas recurrentes, como el caso de la obtención de los usuarios a partir del token de autenticación.
