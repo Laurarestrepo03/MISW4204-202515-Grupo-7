@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS videos (
     video_id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
     status VARCHAR(50) DEFAULT 'uploaded',
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMP,
@@ -25,7 +26,6 @@ CREATE TABLE IF NOT EXISTS videos (
     votes INTEGER DEFAULT 0,
     task_id VARCHAR(255),
     user_id INTEGER NOT NULL,
-    player_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 

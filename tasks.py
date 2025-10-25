@@ -4,8 +4,25 @@ from datetime import datetime, timezone
 from pathlib import Path
 import models
 from database import SessionLocal
+import time
 
 celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
+
+@celery_app.task()
+def check_unprocessed_videos():
+    db = SessionLocal()
+    try:
+        unprocessed_videos = db.query(models.Video).filter(models.Video.task_id == None).all()
+        for video in unprocessed_videos:
+            video_path = "original_videos/" + video.original_filename.replace(" ", "_")
+            result = process_video.delay(video_path, video.title, video.video_id)   
+            add_task_id(video.video_id, result.id)
+    finally:
+        db.close()
+        time.sleep(30)
+        check_unprocessed_videos.delay()
+
+check_unprocessed_videos.delay()
 
 @celery_app.task(default_retry_delay=5, max_retries=3)
 def process_video(video_path: str, title: str, video_id: int):
@@ -56,5 +73,15 @@ def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: s
         video.processed_at = processed_at
         video.processed_url = processed_url
         db.commit()    
+    finally:
+        db.close()
+
+def add_task_id(video_id: int, task_id: int):
+    db = SessionLocal()
+    try:
+        video = db.get(models.Video, video_id)
+        if video:
+            video.task_id = task_id
+            db.commit()
     finally:
         db.close()

@@ -24,6 +24,7 @@ class User(Base):
 class Video(Base):
     __tablename__ = 'videos'
     video_id = Column(Integer, primary_key=True, index=True)
+    original_filename = Column(String, nullable=False)
     title = Column(String, index=True)
     status = Column(Enum(VideoStatus), index=True)
     uploaded_at = Column(DateTime)

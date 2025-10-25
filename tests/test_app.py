@@ -80,11 +80,11 @@ def test_upload_video_201():
     data = upload_body[0]
     files = upload_body[1]
     response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
+    video_id = response.json()["video_id"]
     assert response.status_code == 201
     assert response.json()["message"] == "Video subido correctamente. Procesamiento en curso"
-    assert response.json()["task_id"] is not None
     assert response.json()["video_id"] is not None
-    delete_video(response.json()["task_id"])
+    delete_video(video_id)
     delete_user(signup_body["email"])
 
 def test_upload_video_400_invalid_type():
@@ -144,7 +144,7 @@ def test_get_videos_200():
     assert "videos" in response.json()
     assert "total" in response.json()
     assert response.json()["total"] >= 1
-    delete_video(upload_response.json()["task_id"])
+    delete_video(upload_response.json()["video_id"])
     delete_user(signup_body["email"])
 
 def test_get_videos_200():
@@ -162,8 +162,8 @@ def test_get_videos_200():
     response = client.get("/api/videos", headers=headers)
     assert response.status_code == 200
     assert len(response.json()) == 2
-    delete_video(video1_response.json()["task_id"])
-    delete_video(video2_response.json()["task_id"])
+    delete_video(video1_response.json()["video_id"])
+    delete_video(video2_response.json()["video_id"])
     delete_user(signup_body["email"])
 
 def test_get_videos_401():
@@ -179,12 +179,11 @@ def test_get_video_200():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = upload_response.json()["video_id"]
     response = client.get("api/videos/"+str(video_id), headers=headers)
     assert response.status_code == 200
     assert response.json()["video_id"] == video_id
-    delete_video(task_id)
+    delete_video(video_id)
     delete_user(signup_body["email"])
 
 def test_get_video_401():
@@ -201,15 +200,14 @@ def test_get_video_403():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=user1_headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = upload_response.json()["video_id"]
     user2_signup_body = signup()
     user2_token = login(user2_signup_body)
     user2_headers = get_headers(user2_token)
     response = client.get("api/videos/"+str(video_id), headers=user2_headers)
     assert response.status_code == 403
     assert response.json() == {"detail":"No tienes permiso para acceder a este video"}
-    delete_video(task_id)
+    delete_video(video_id)
     delete_user(user1_signup_body["email"])
     delete_user(user2_signup_body["email"])
 
@@ -221,9 +219,8 @@ def test_get_video_404():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
-    delete_video(task_id)
+    video_id = upload_response.json()["video_id"]
+    delete_video(video_id)
     response = client.get("api/videos/"+str(video_id), headers=headers)
     assert response.status_code == 404
     assert response.json() == video_404_error
@@ -237,12 +234,11 @@ def test_delete_video_200():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = upload_response.json()["video_id"]
     response = client.delete("api/videos/"+str(video_id), headers=headers)
     assert response.status_code == 200
     assert response.json() == {"message":"Video eliminado exitosamente", "video_id": video_id}
-    assert get_video_id(task_id) == 0
+    assert get_video(video_id) == 0
     delete_user(signup_body["email"])
 
 def test_delete_video_400():
@@ -253,13 +249,12 @@ def test_delete_video_400():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = upload_response.json()["video_id"]
     update_votes(video_id)
     response = client.delete("api/videos/"+str(video_id), headers=headers)
     assert response.status_code == 400
     assert response.json() == {"detail":"El video no puede ser eliminado porque ya fue habilitado para votación"}
-    delete_video(task_id)
+    delete_video(video_id)
     delete_user(signup_body["email"])
 
 def test_delete_video_401():
@@ -276,15 +271,14 @@ def test_delete_video_403():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=user1_headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
+    video_id = upload_response.json()["video_id"]
     user2_signup_body = signup()
     user2_token = login(user2_signup_body)
     user2_headers = get_headers(user2_token)
     response = client.delete("api/videos/"+str(video_id), headers=user2_headers)
     assert response.status_code == 403
     assert response.json() == {"detail":"No tienes permiso para eliminar este video"}
-    delete_video(task_id)
+    delete_video(video_id)
     delete_user(user1_signup_body["email"])
     delete_user(user2_signup_body["email"])
 
@@ -296,9 +290,8 @@ def test_delete_video_404():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    task_id = upload_response.json()["task_id"]
-    video_id = get_video_id(task_id)
-    delete_video(task_id)
+    video_id = upload_response.json()["video_id"]
+    delete_video(video_id)
     response = client.delete("api/videos/"+str(video_id), headers=headers)
     assert response.status_code == 404
     assert response.json() == video_404_error
@@ -313,8 +306,8 @@ def test_vote_video_200():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    video_id = get_video_id(upload_response.json()["task_id"])
-    
+    video_id = upload_response.json()["video_id"]
+
     signup_body2 = signup()
     token2 = login(signup_body2)
     headers2 = get_headers(token2)
@@ -323,7 +316,7 @@ def test_vote_video_200():
     assert response.status_code == 200
     assert response.json()["message"] == "Voto registrado exitosamente."
     delete_vote(video_id, signup_body2["email"])
-    delete_video(upload_response.json()["task_id"])
+    delete_video(upload_response.json()["video_id"])
     delete_user(signup_body["email"])
     delete_user(signup_body2["email"])
 
@@ -335,7 +328,7 @@ def test_vote_video_400():
     data = upload_body[0]
     files = upload_body[1]
     upload_response = client.post("/api/videos/upload", headers=headers, data=data, files=files)
-    video_id = get_video_id(upload_response.json()["task_id"])
+    video_id = upload_response.json()["video_id"]
     
     signup_body2 = signup()
     token2 = login(signup_body2)
@@ -346,7 +339,7 @@ def test_vote_video_400():
     assert response.status_code == 400
     assert response.json() == {"detail": "Ya has votado por este video"}
     delete_vote(video_id, signup_body2["email"])
-    delete_video(upload_response.json()["task_id"])
+    delete_video(video_id)
     delete_user(signup_body["email"])
     delete_user(signup_body2["email"])
 
@@ -468,10 +461,10 @@ def delete_user(email: str):
     finally:
         db.close()
 
-def delete_video(task_id: str):
+def delete_video(video_id: int):
     db = SessionLocal()
     try:
-        video = db.query(models.Video).filter_by(task_id=task_id).first()
+        video = db.get(models.Video, video_id)
         if not video:
             pass
         else:
@@ -480,15 +473,14 @@ def delete_video(task_id: str):
     finally:
         db.close()
 
-def get_video_id(task_id: str):
+def get_video(video_id: int):
     db = SessionLocal()
     try:
-        video = db.query(models.Video).filter_by(task_id=task_id).first()
+        video = db.get(models.Video, video_id)
         if not video:
             return 0
         else:
-            video_id = video.video_id 
-            return video_id  
+            return video  
     finally:
         db.close()
 

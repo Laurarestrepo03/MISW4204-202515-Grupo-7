@@ -78,33 +78,27 @@ def upload_video(
             video.close()
             os.remove(video_path)
             return four_hundred_error
-        video_id = add_uploaded_video(title, datetime.now(timezone.utc), current_user.user_id, db)
-        result = process_video.delay(video_path, title, video_id)
-        add_task_id(video_id, result.id, db)
+        video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
+        #result = process_video.delay(video_path, title, video_id)
+        #add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
-                            "task_id": result.id, "video_id": video_id}) 
+                            "video_id": video_id}) 
     except Exception as e:
         return JSONResponse(status_code = status.HTTP_500_INTERNAL_SERVER_ERROR,
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
 
-def add_uploaded_video(title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
+def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
-    db_video = models.Video(title=title, status=models.VideoStatus.UPLOADED, uploaded_at=uploaded_at, 
+    db_video = models.Video(original_filename=filename, title=title, status=models.VideoStatus.UPLOADED, uploaded_at=uploaded_at, 
                             processed_at=None, original_url=original_url, processed_url=None, user_id=user_id)
     db.add(db_video)
     db.commit()
     db.refresh(db_video)
     video_id = db_video.video_id
     return video_id
-
-def add_task_id(video_id: int, task_id: int, db: db_dependency):
-    video = db.get(models.Video, video_id)
-    if video:
-        video.task_id = task_id
-        db.commit()
 
 # 2. Consultar mis videos
 @app.get("/api/videos")
