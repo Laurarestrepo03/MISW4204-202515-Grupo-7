@@ -17,6 +17,6 @@ La documentación relevante a la entrega 1, y otro contenido de interés puede s
     - [Pruebas unitarias](docs/Entrega_1/pruebas_unitarias.md)
     - [Reporte SonarQube](docs/Entrega_1/sonarqube.md)
 - [Sustentación (video)](sustentacion/Entrega_1.md)
-- [Plan de pruebas](capacity_planning/plan_de_pruebas.md)
+- [Plan de pruebas de capacidad](capacity-planning/plan_de_pruebas.md)
 - [Colección Postman](collections/)
 
