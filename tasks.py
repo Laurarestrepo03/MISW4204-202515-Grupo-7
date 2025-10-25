@@ -5,8 +5,13 @@ from pathlib import Path
 import models
 from database import SessionLocal
 import time
+from celery.signals import worker_ready
 
 celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
+
+@worker_ready.connect
+def at_start(sender, **kwargs):
+    check_unprocessed_videos.delay()
 
 @celery_app.task()
 def check_unprocessed_videos():
@@ -21,8 +26,6 @@ def check_unprocessed_videos():
         db.close()
         time.sleep(30)
         check_unprocessed_videos.delay()
-
-check_unprocessed_videos.delay()
 
 @celery_app.task(default_retry_delay=5, max_retries=3)
 def process_video(video_path: str, title: str, video_id: int):
