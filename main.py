@@ -8,7 +8,6 @@ from pathlib import Path
 from database import engine, SessionLocal
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
-from tasks import process_video
 import models
 import shutil
 import os
