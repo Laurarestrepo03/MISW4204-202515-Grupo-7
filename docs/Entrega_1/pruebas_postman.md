@@ -1,7 +1,7 @@
 ## 👨‍🚀 Pruebas Postman
 Antes de ejecutar las pruebas de Postman, se recomienda ver la documentación en línea:
 
-**https://documenter.getpostman.com/view/17535481/2sB3QQK85r**
+**https://documenter.getpostman.com/view/17535481/2sB3WmS2Hj**
 
 o importar localmente el archivo de la [colección ANB_Tests](../../collections/ANB_Tests.postman_collection.json) en Postman.
 
