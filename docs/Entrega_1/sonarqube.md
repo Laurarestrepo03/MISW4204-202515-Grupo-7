@@ -1,4 +1,4 @@
-## Análisis de Calidad de Código con SonarCloud
+## Análisis de Calidad de Código con SonarCloud - Entrega 2
 
 El proyecto utiliza **SonarCloud** para análisis automático de calidad de código, detectando bugs, vulnerabilidades de seguridad, code smells y midiendo la cobertura de tests.
 
