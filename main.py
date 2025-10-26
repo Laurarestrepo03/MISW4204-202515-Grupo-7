@@ -60,7 +60,9 @@ def upload_video(
         return four_hundred_error
 
     # Se guarda el video original para procesarlo
-    upload_dir = Path("original_videos")
+    ruta_original = os.getcwd()
+    os.chdir('..')
+    upload_dir = Path("remote-folder/original_videos")
     upload_dir.mkdir(parents=True, exist_ok=True)
     # Sanitizar el nombre del archivo para prevenir path traversal
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
@@ -69,7 +71,7 @@ def upload_video(
     try:
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
-        video_path = "original_videos/"+safe_filename
+        video_path = "remote-folder/original_videos/"+safe_filename
         video = VideoFileClip(video_path)
         duration = video.duration
         file_size = os.path.getsize(video_path) / (1024*1024)
@@ -78,8 +80,6 @@ def upload_video(
             os.remove(video_path)
             return four_hundred_error
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
-        #result = process_video.delay(video_path, title, video_id)
-        #add_task_id(video_id, result.id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "video_id": video_id}) 
@@ -88,6 +88,7 @@ def upload_video(
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
+        os.chdir(ruta_original)
 
 def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
