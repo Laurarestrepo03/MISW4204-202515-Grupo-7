@@ -63,7 +63,7 @@ def process_video(video_path: str, title: str, video_id: int):
         # 4. Agregar logo ANB
         try:
             anb_logo = VideoFileClip("remote-folder/assets/anb_logo.mp4").resized(height=resolution)
-        except:
+        except FileNotFoundError:
             anb_logo = VideoFileClip(ruta_original+"/assets/anb_logo.mp4").resized(height=resolution)
         videos = [anb_logo, video, anb_logo]
         final_video = concatenate_videoclips(videos, method='compose')
