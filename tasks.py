@@ -13,11 +13,11 @@ ruta_original = os.getcwd()
 
 @worker_ready.connect
 def at_start(sender, **kwargs):
-    os.chdir('..')
     check_unprocessed_videos.delay(True)
 
 @celery_app.task()
 def check_unprocessed_videos(first_time: bool = False):
+    os.chdir('..')
     db = SessionLocal()
     try:
         unprocessed_videos = db.query(models.Video).filter(models.Video.task_id == None).all()
@@ -27,12 +27,15 @@ def check_unprocessed_videos(first_time: bool = False):
             add_task_id(video.video_id, result.id)
     finally:
         db.close()
+        os.chdir(ruta_original)
         if not first_time:
             time.sleep(300)
         check_unprocessed_videos.delay()
 
+
 @celery_app.task(default_retry_delay=5, max_retries=3)
 def process_video(video_path: str, title: str, video_id: int):
+    os.chdir('..')
     try:
         #raise TypeError("Forced error") # -> Descomentar esta linea para forzar un error
         # Crear carpeta processed_videos si no existe
@@ -71,6 +74,8 @@ def process_video(video_path: str, title: str, video_id: int):
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
+    finally:
+        os.chdir(ruta_original)
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
