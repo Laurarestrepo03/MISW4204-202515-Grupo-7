@@ -109,6 +109,9 @@ Adicionalmente mediante la herramienta htop se monitoreo el uso de CPU y memoria
   - Uso promedio de memoria: 810MB
   - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.625 videos/minuto a 30MB
   - Puntos de saturación: CPU al 96% al terminar de enviarse todos los videos.
+ 
+    <img width="1344" height="704" alt="HTOP" src="https://github.com/user-attachments/assets/e77d9bba-a4e7-4a4a-91f4-0ef308553086" />
+
 ## Recomendaciones para escalar la solución
 * Aumentar el número de hilos del worker para aprovechar mejor la capacidad de la CPU.
 * Aumentar el número de máquinas virtuales worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU.
