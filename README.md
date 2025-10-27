@@ -9,14 +9,11 @@ Nicolás Javier Jaramillo Cely | nj.jaramillo@uniandes.edu.co
 Laura María Restrepo Palomino | l.restrepop@uniandes.edu.co
 
 ## Documentación y Contenido del Repositorio
-La documentación relevante a la entrega 1, y otro contenido de interés puede ser accedido mediante los siguientes enlaces:
-- [Documentación](docs/Entrega_1/)
-    - [Ejecución de la aplicación](docs/Entrega_1/intrucciones_ejecucion.md)
-    - [Documentación Postman](docs/Entrega_1/pruebas_postman.md)
-    - [Diagramas y modelos](docs/Entrega_1/diagramas.md)
-    - [Pruebas unitarias](docs/Entrega_1/pruebas_unitarias.md)
-    - [Reporte SonarQube](docs/Entrega_1/sonarqube.md)
-- [Sustentación (video)](sustentacion/Entrega_1.md)
-- [Plan de pruebas de capacidad](capacity-planning/plan_de_pruebas.md)
-- [Colección Postman](collections/)
+La documentación relevante a la entrega 2, y otro contenido de interés puede ser accedido mediante los siguientes enlaces:
+- [Documentación](docs/Entrega_2/)
+    - [Diagramas y modelos](docs/Entrega_2/diagramas.md)
+    - [Arquitectura](docs/Entrega_2/arquitectura.md)
+    - [Reporte SonarQube](docs/Entrega_2/sonarqube.md)
+- [Sustentación (video)](sustentacion/Entrega_2.md)
+- [Pruebas de carga](capacity-planning/pruebas_de_carga_entrega2.md)
 
