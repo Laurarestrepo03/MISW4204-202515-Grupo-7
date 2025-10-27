@@ -15,5 +15,5 @@ La documentación relevante a la entrega 2, y otro contenido de interés puede s
     - [Arquitectura](docs/Entrega_2/arquitectura.md)
     - [Reporte SonarQube](docs/Entrega_2/sonarqube.md)
 - [Sustentación (video)](sustentacion/Entrega_2.md)
-- [Pruebas de carga](capacity-planning/pruebas_de_carga_entrega2.md)
+- [Pruebas de carga](capacity-planning/Entrega_2/pruebas_de_carga_entrega2.md)
 
