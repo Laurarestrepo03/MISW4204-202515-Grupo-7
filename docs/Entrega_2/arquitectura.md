@@ -57,13 +57,15 @@ La arquitectura se compone de **4 componentes principales** distribuidos en dife
 
 ---
 
-## Diagrama de Despliegue
+## Diagramas
+A continuación se encuentran los diagramas de componentes y despliegue, que también, para una versión de mejor calidad, pueden ser vistos en la carpeta [/diagramas](diagramas/).
 
-
-
-## Diagrama de Componentes
+### Diagrama de Componentes
 <img width="1969" height="1461" alt="image" src="https://github.com/user-attachments/assets/f96f1025-f530-4d0f-ab10-bd1194272a12" />
 
+### Diagrama de Despliegue
+
+<img width="1537" height="1007" alt="diagrama_despliegue" src="https://github.com/user-attachments/assets/58509f5c-a72f-47c0-98f3-049151920adb" />
 
 
 ## Flujo de Procesamiento de Videos
@@ -176,3 +178,4 @@ Cola de Celery:
 ---
 **Documentación actualizada**: 26 de octubre de 2025  
 **Versión**: 2.0 (Subido en AWS)
+
