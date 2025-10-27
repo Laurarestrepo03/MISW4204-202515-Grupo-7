@@ -27,10 +27,14 @@ Después de cada push a `main`, se genera un nuevo reporte con las métricas act
 - Duplicación de código
 
 ## Pantallazos del reporte
-<img width="3289" height="1745" alt="image" src="https://github.com/user-attachments/assets/5eeaaae7-0830-4046-806d-95d78c2f13f8" />
+<img width="1919" height="850" alt="Captura de pantalla 2025-10-26 201705" src="https://github.com/user-attachments/assets/3760dd81-8e40-4fd8-a9ab-3c8100affdc9" />
 
-<img width="3302" height="1806" alt="image" src="https://github.com/user-attachments/assets/550be5ed-cce5-4fca-9a8e-e9a9e168616e" />
+<img width="1919" height="852" alt="Captura de pantalla 2025-10-26 200837" src="https://github.com/user-attachments/assets/9187d3ea-6255-4963-a072-f0a5bc69f8cd" />
 
-<img width="3223" height="1747" alt="image" src="https://github.com/user-attachments/assets/41f1ef1a-3062-43ec-9a7a-29088a64bc66" />
+<img width="1919" height="847" alt="Captura de pantalla 2025-10-26 201630" src="https://github.com/user-attachments/assets/7991f1ff-5c0f-46be-9b95-b5257b3125ee" />
 
-<img width="3157" height="1708" alt="image" src="https://github.com/user-attachments/assets/69ed0123-dbbc-439f-ab70-efde02280c58" />
+<img width="1919" height="851" alt="Captura de pantalla 2025-10-26 201644" src="https://github.com/user-attachments/assets/15472998-61d6-4f51-8df6-b69b5cc86cb9" />
+
+<img width="1919" height="847" alt="Captura de pantalla 2025-10-26 201654" src="https://github.com/user-attachments/assets/011fb766-e6f1-4399-ad64-bd1b42481924" />
+
+
