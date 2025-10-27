@@ -28,7 +28,6 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * Bottlenecks con evidencias.
 
 ## Resultados
-(Modificar)
 * Se crearon 3 treads de usuarios en JMeter, cada uno enviando peticiones de subida de video de aproximadamente 8MB de tamaño; de acuerdo a cada escenario de prueba.
 * El archivo plantilla en Jmeter se encuentra en el repositorio en el archivo: [HTTP_Request_cargar_videos.jmx](HTTP_Request_cargar_videos.jmx)
 * Los archivos con los resultados de las pruebas se encuentran en la carpeta [/results](results/).
