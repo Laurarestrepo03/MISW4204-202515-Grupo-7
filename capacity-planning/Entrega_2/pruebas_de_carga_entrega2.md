@@ -32,7 +32,7 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * Se crearon 3 treads de usuarios en JMeter, cada uno enviando peticiones de subida de video de aproximadamente 8MB de tamaño; de acuerdo a cada escenario de prueba.
 * El archivo plantilla en Jmeter se encuentra en el repositorio en el archivo: [HTTP_Request_cargar_videos.jmx](HTTP_Request_cargar_videos.jmx)
 * Los archivos con los resultados de las pruebas se encuentran en la carpeta [/results](results/).
-* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 80 usuarios concurrentes en un periodo de tiempo de 3 minutos sin presentar una degradación significativa. El 90% de las peticiones presentaron respuesta exitosa, aunque la latencia alcanzó niveles significativos, llegando a varios segundos en algunas peticiones.
+* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 80 usuarios concurrentes en un periodo de tiempo de 3 minutos presentando una degradación considerable. El 90% de las peticiones presentaron respuesta exitosa, aunque la latencia alcanzó niveles significativos, llegando a varios segundos en algunas peticiones.
 * A partir de 120 usuarios, se empiezan a observar una mayor cantidad de errores 500 en las respuestas, aproximadamente en el 17%, y la latencia de las peticiones empieza a aumentar hasta llegar a un valores por encima de los 100 segundos.
 * A partir de esto se determina que el valor de RPS (Request per second) es de aproximadamente 0.44.
 * A partir de los logs del aplicativo, se encontró que el cuello de botella es la base de datos. Se está alcanzando el límite de conexiones rapidamente, lo que tumba la conexión entre el aplicativo y la base de datos, dejando el sistema inutilizable hasta que este se reinicie.
@@ -40,27 +40,31 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 
 ### 80 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-(Colocar imagenes)
+<img width="1082" height="667" alt="image" src="https://github.com/user-attachments/assets/1b5221ae-32a8-4302-896e-2499665ee64b" />
 
 * Latencia
-(Colocar imagenes)
+<img width="1075" height="468" alt="image" src="https://github.com/user-attachments/assets/c913a4ed-520f-4631-a2cb-20bfd218c3b2" />
+
 
 ### 120 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-(Colocar imagenes)
+<img width="1063" height="619" alt="image" src="https://github.com/user-attachments/assets/b0ec67dc-700f-445d-9ef1-868a118dbbfe" />
 
 * Latencia
-(Colocar imagenes)
+<img width="1044" height="445" alt="image" src="https://github.com/user-attachments/assets/cbb1e0a7-cdd9-4c7a-b993-65d142375714" />
+
 
 ### 150 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-(Colocar imagenes)
+<img width="1054" height="621" alt="image" src="https://github.com/user-attachments/assets/467e093d-a412-4fef-ae8e-ba54a5258513" />
+
 
 * Latencia
-(Colocar imagenes)
+<img width="1042" height="456" alt="image" src="https://github.com/user-attachments/assets/ee44e066-ce92-4d5a-9478-008efcf2143b" />
+
 
 ## Recomendaciones para escalar la solución
-* Se recomienda 
+* Se recomienda incrementar la capacidad de conexiones persistentes a la base de datos, para disminuir el cuello de botella que se presenta en dicha conexión.
 
 ### Escenario 2 - Capacidad de la capa Web (usuarios concurrentes)
 Medir cuántos videos por minuto procesa el worker a distinto volúmen de videos a ejecutar.
