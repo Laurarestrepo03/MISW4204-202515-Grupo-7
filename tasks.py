@@ -36,13 +36,16 @@ def process_video(video_name: str, title: str, video_id: int):
     try:
         #raise TypeError("Forced error") # -> Descomentar esta linea para forzar un error
         # Crear carpeta processed si no existe
-        temp_dir = Path("temp_files/processed")
-        temp_dir.mkdir(parents=True, exist_ok=True)
+        temp_dir_original = Path("temp_files/original")
+        temp_dir_original.mkdir(parents=True, exist_ok=True)
+        temp_dir_processed = Path("temp_files/processed")
+        temp_dir_processed.mkdir(parents=True, exist_ok=True)
 
-        retrieve_file_from_bucket(video_name)
+        s3_path="original_videos/"+video_name
+        local_path = "temp_files/original/"+video_name
+        retrieve_file_from_bucket(s3_path, local_path)
 
-        video_path = "temp_files/"+video_name
-        video = VideoFileClip(video_path)
+        video = VideoFileClip(local_path)
 
         # 1. Quitar audio
         video = video.with_volume_scaled(0.0)
@@ -71,6 +74,7 @@ def process_video(video_name: str, title: str, video_id: int):
         processed_url = "https://anb.com/videos/processed/"+no_spaces_title
 
         upload_file_to_bucket(temp_video_path, "processed_videos/"+no_spaces_title)
+        os.remove(local_path)
         os.remove(temp_video_path)
         
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
