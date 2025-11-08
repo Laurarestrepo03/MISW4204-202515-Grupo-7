@@ -7,7 +7,7 @@ from celery.signals import worker_ready
 from s3 import retrieve_file_from_bucket, upload_file_to_bucket
 import models
 import time
-import os
+import shutil
 
 celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
 
@@ -74,11 +74,13 @@ def process_video(video_name: str, title: str, video_id: int):
         processed_url = "https://anb.com/videos/processed/"+no_spaces_title
 
         upload_file_to_bucket(temp_video_path, "processed_videos/"+no_spaces_title)
-        os.rmdir("temp_files")
+        
         
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
+    finally:
+        shutil.rmtree("temp_files")
         
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
