@@ -47,3 +47,5 @@ subir_sonarqube.sh
 ejecutar_sonarqube.sh
 
 !*sonarqube.md
+
+.env
