@@ -74,8 +74,7 @@ def process_video(video_name: str, title: str, video_id: int):
         processed_url = "https://anb.com/videos/processed/"+no_spaces_title
 
         upload_file_to_bucket(temp_video_path, "processed_videos/"+no_spaces_title)
-        os.remove(local_path)
-        os.remove(temp_video_path)
+        os.rmdir("temp_files")
         
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
