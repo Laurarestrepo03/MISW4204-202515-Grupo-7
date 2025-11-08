@@ -81,7 +81,7 @@ def upload_video(
         if duration < 20 or duration > 60 or file_size > 100:
             video.close()
             return four_hundred_error
-        upload_file_to_bucket(file_location, video_file.filename.replace(" ", "_"))
+        upload_file_to_bucket(file_location, "original_videos/"+video_file.filename.replace(" ", "_"))
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
