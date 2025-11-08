@@ -63,7 +63,6 @@ def upload_video(
         return four_hundred_error
     
     # Se guarda el video original para procesarlo
-    ruta_original = os.getcwd()
     os.chdir('..')
     upload_dir = Path("temp_files")
     upload_dir.mkdir(parents=True, exist_ok=True)
@@ -71,26 +70,18 @@ def upload_video(
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
 
+    video_path = "temp_files/"+safe_filename
+
     try:
         with open(file_location, "wb") as buffer:
-                shutil.copyfileobj(video_file.file, buffer)
-    finally:
-        video_file.file.close()
-
-
-    upload_file_to_bucket(file_location, video_file.filename.replace(" ", "_"))
-    
-    """ try:
-        with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
-        video_path = "remote-folder/original_videos/"+safe_filename
         video = VideoFileClip(video_path)
         duration = video.duration
         file_size = os.path.getsize(video_path) / (1024*1024)
         if duration < 20 or duration > 60 or file_size > 100:
             video.close()
-            os.remove(video_path)
             return four_hundred_error
+        upload_file_to_bucket(file_location, video_file.filename.replace(" ", "_"))
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
@@ -100,7 +91,7 @@ def upload_video(
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
-        os.chdir(ruta_original) """
+        os.remove(video_path)
 
 def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
