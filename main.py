@@ -71,6 +71,13 @@ def upload_video(
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
 
+    try:
+        with open(file_location, "wb") as buffer:
+                shutil.copyfileobj(video_file.file, buffer)
+    finally:
+        video_file.file.close()
+
+
     upload_file_to_bucket(file_location, video_file.filename.replace(" ", "_"))
     
     """ try:
