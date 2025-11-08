@@ -10,11 +10,14 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 import models
 import shutil
+from pydantic import BaseModel
 import os
 import auth
-from pydantic import BaseModel
+import boto3
+from s3 import upload_file_to_bucket
 
 app = FastAPI()
+s3 = boto3.client('s3')
 models.Base.metadata.create_all(bind=engine)
 
 # Modelos Pydantic para respuestas
@@ -58,8 +61,10 @@ def upload_video(
 
     if video_file.content_type != "video/mp4":
         return four_hundred_error
+    
+    upload_file_to_bucket(video_file.file, video_file.filename.replace(" ", "_"))
 
-    # Se guarda el video original para procesarlo
+    """ # Se guarda el video original para procesarlo
     ruta_original = os.getcwd()
     os.chdir('..')
     upload_dir = Path("remote-folder/original_videos")
@@ -67,7 +72,7 @@ def upload_video(
     # Sanitizar el nombre del archivo para prevenir path traversal
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
-
+    
     try:
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
@@ -88,7 +93,7 @@ def upload_video(
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
-        os.chdir(ruta_original)
+        os.chdir(ruta_original) """
 
 def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
