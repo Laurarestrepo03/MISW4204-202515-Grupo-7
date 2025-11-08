@@ -8,13 +8,13 @@ from pathlib import Path
 from database import engine, SessionLocal
 from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
+from pydantic import BaseModel
+from s3 import upload_file_to_bucket
 import models
 import shutil
-from pydantic import BaseModel
 import os
 import auth
 import boto3
-from s3 import upload_file_to_bucket
 
 app = FastAPI()
 s3 = boto3.client('s3')
