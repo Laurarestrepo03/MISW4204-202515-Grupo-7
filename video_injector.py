@@ -6,7 +6,7 @@ import time
 def check_unprocessed_videos():
     db = SessionLocal()
     delay_between_videos = 1
-    number_petitions = 100
+    number_petitions = 500
     try:
         for _ in range(number_petitions):
             title = "Michael Jordan"
