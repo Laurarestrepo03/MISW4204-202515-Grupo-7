@@ -71,12 +71,12 @@ def process_video(video_name: str, title: str, video_id: int):
         processed_url = "https://anb.com/videos/processed/"+no_spaces_title
 
         upload_file_to_bucket(temp_video_path, "processed_videos/"+no_spaces_title)
+        os.remove(temp_video_path)
         
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
-    finally:
-        os.remove(temp_video_path)
+        
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
