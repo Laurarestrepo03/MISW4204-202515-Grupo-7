@@ -62,18 +62,18 @@ def upload_video(
     if video_file.content_type != "video/mp4":
         return four_hundred_error
     
-    upload_file_to_bucket(video_file.file, video_file.filename.replace(" ", "_"))
-
-    """ # Se guarda el video original para procesarlo
+    # Se guarda el video original para procesarlo
     ruta_original = os.getcwd()
     os.chdir('..')
-    upload_dir = Path("remote-folder/original_videos")
+    upload_dir = Path("temp_files")
     upload_dir.mkdir(parents=True, exist_ok=True)
     # Sanitizar el nombre del archivo para prevenir path traversal
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
+
+    upload_file_to_bucket(file_location, video_file.filename.replace(" ", "_"))
     
-    try:
+    """ try:
         with open(file_location, "wb") as buffer:
             shutil.copyfileobj(video_file.file, buffer)
         video_path = "remote-folder/original_videos/"+safe_filename
