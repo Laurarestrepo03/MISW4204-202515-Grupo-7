@@ -64,13 +64,13 @@ def upload_video(
     
     # Se guarda el video original para procesarlo
     os.chdir('..')
-    upload_dir = Path("temp_files")
+    upload_dir = Path("temp_files/original")
     upload_dir.mkdir(parents=True, exist_ok=True)
     # Sanitizar el nombre del archivo para prevenir path traversal
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
 
-    video_path = "temp_files/"+safe_filename
+    video_path = "temp_files/original/"+safe_filename
 
     try:
         with open(file_location, "wb") as buffer:

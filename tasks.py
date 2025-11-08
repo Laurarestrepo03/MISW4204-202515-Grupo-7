@@ -2,14 +2,14 @@ from celery import Celery
 from moviepy import VideoFileClip, ColorClip, CompositeVideoClip, concatenate_videoclips
 from datetime import datetime, timezone
 from pathlib import Path
-import models
 from database import SessionLocal
+from celery.signals import worker_ready
+from s3 import retrieve_file_from_bucket, upload_file_to_bucket
+import models
 import time
 import os
-from celery.signals import worker_ready
 
 celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
-ruta_original = os.getcwd()
 
 @worker_ready.connect
 def at_start(sender, **kwargs):
@@ -17,31 +17,31 @@ def at_start(sender, **kwargs):
 
 @celery_app.task()
 def check_unprocessed_videos(first_time: bool = False):
-    os.chdir('..')
     db = SessionLocal()
     try:
         unprocessed_videos = db.query(models.Video).filter(models.Video.task_id == None).all()
         for video in unprocessed_videos:
-            video_path = "remote-folder/original_videos/" + video.original_filename.replace(" ", "_")
-            result = process_video.delay(video_path, video.title, video.video_id)   
+            video_name = video.original_filename.replace(" ", "_")
+            result = process_video.delay(video_name, video.title, video.video_id)   
             add_task_id(video.video_id, result.id)
     finally:
         db.close()
-        os.chdir(ruta_original)
         if not first_time:
             time.sleep(300)
         check_unprocessed_videos.delay()
 
 
 @celery_app.task(default_retry_delay=5, max_retries=3)
-def process_video(video_path: str, title: str, video_id: int):
-    os.chdir('..')
+def process_video(video_name: str, title: str, video_id: int):
     try:
         #raise TypeError("Forced error") # -> Descomentar esta linea para forzar un error
-        # Crear carpeta processed_videos si no existe
-        processed_dir = Path("remote-folder/processed_videos")
-        processed_dir.mkdir(parents=True, exist_ok=True)
-        
+        # Crear carpeta processed si no existe
+        temp_dir = Path("temp_files/processed")
+        temp_dir.mkdir(parents=True, exist_ok=True)
+
+        retrieve_file_from_bucket(video_name)
+
+        video_path = "temp_files/"+video_name
         video = VideoFileClip(video_path)
 
         # 1. Quitar audio
@@ -61,21 +61,22 @@ def process_video(video_path: str, title: str, video_id: int):
         video = CompositeVideoClip([background, video])
 
         # 4. Agregar logo ANB
-        try:
-            anb_logo = VideoFileClip("remote-folder/assets/anb_logo.mp4").resized(height=resolution)
-        except FileNotFoundError:
-            anb_logo = VideoFileClip(ruta_original+"/assets/anb_logo.mp4").resized(height=resolution)
+        anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=resolution)
         videos = [anb_logo, video, anb_logo]
         final_video = concatenate_videoclips(videos, method='compose')
-        final_video.write_videofile("remote-folder/processed_videos/"+title.replace(" ", "_")+".mp4")
+        no_spaces_title = title.replace(" ", "_")+".mp4"
+        temp_video_path = "temp_files/processed/"+no_spaces_title
+        final_video.write_videofile(temp_video_path)
 
-        processed_url = "https://anb.com/videos/processed/"+title.replace(" ", "_")+".mp4"
+        processed_url = "https://anb.com/videos/processed/"+no_spaces_title
 
+        upload_file_to_bucket(temp_video_path, "processed_videos/"+no_spaces_title)
+        
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
     finally:
-        os.chdir(ruta_original)
+        os.remove(temp_video_path)
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
     db = SessionLocal()
