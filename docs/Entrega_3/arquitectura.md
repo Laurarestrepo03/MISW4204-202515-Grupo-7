@@ -1,5 +1,4 @@
-# Arquitectura Entrega 3 del Sistema - ANB Rising Stars
-
+# Arquitectura Entrega 3 del Sistema - ANB
 ## Descripción General
 El sistema ANB  es una plataforma de gestión y votación de videos de baloncesto desplegada en AWS. En esta tercera entrega, la arquitectura evoluciona para garantizar alta disponibilidad, escalabilidad automática y distribución de carga, incorporando balanceadores de carga (Load Balancer) y grupos de auto escalado (Auto Scaling Groups) que replican dinámicamente las instancias del backend REST según la demanda.
 
@@ -175,6 +174,7 @@ La arquitectura ahora se compone de 6 componentes principales:
 ## Diagramas
 
 ### Diagrama de Componentes (Entrega 3)
+<img width="2917" height="1948" alt="image" src="https://github.com/user-attachments/assets/ad44b16b-b488-4358-aff9-faf6b70e2cfc" />
 
 
 El diagrama muestra:
@@ -190,7 +190,7 @@ El diagrama muestra:
   - Bucket S3 (lectura y escritura)
 
 ### Diagrama de Despliegue (Entrega 3)
-
+<img width="2704" height="1933" alt="image" src="https://github.com/user-attachments/assets/6bc4bdf6-7893-480e-9920-2b7e58e46c51" />
 
 El diagrama de despliegue ilustra la distribución física de los componentes en la infraestructura de AWS:
 
@@ -393,11 +393,12 @@ Petición 4 → Load Balancer → Instancia 1 (10.0.1.15:8000)
 
 ## Conclusión
 
-La arquitectura de la Entrega 3 representa una evolución significativa hacia un sistema altamente disponible, escalable y resiliente. La introducción del Load Balancer y el Auto Scaling Group permite que el sistema ANB Rising Stars maneje cargas variables de tráfico de manera eficiente, manteniendo una experiencia de usuario consistente incluso durante picos de demanda.
+La arquitectura de la Entrega 3 representa una evolución significativa hacia un sistema altamente disponible, escalable y resiliente. La introducción del Load Balancer y el Auto Scaling Group permite que el sistema ANB maneje cargas variables de tráfico de manera eficiente, manteniendo una experiencia de usuario consistente incluso durante picos de demanda.
 
 Aunque esta configuración introduce mayor complejidad operacional y costos variables, las ventajas en términos de disponibilidad y escalabilidad justifican la inversión para un sistema en producción.
 
 ---
 
 **Documentación actualizada**: 09 de noviembre de 2025 
+
 **Versión**: 3.0 (AWS con Load Balancer y Auto Scaling)  
