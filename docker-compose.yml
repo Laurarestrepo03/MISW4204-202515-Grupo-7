@@ -1,37 +1,6 @@
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: anb_postgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-anb}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d anb"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  app:
+ app:
     build: .
     command: uvicorn main:app --host 0.0.0.0
     ports:
       - "8000:8000"
-    environment:
-      DATABASE_HOSTNAME: localhost
-      DATABASE_PORT: 5432
-      DATABASE_NAME: ${POSTGRES_DB:-anb}
-      DATABASE_USER: ${POSTGRES_USER:-postgres}
-      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
-    depends_on:
-      - postgres
-
-volumes:
-  postgres_data:
-    driver: local
