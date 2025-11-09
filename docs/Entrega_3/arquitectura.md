@@ -102,11 +102,13 @@ La arquitectura ahora se compone de 6 componentes principales:
   - Capacidad máxima: 3 instancias
   - Zonas de disponibilidad: us-east-1a, us-east-1b
   - Launch Template: backend-rest-launch-template
-- **Política de Escalado**:
-  - Métrica: Uso de CPU
-  - Umbral de escalado hacia arriba: 50% CPU
-  - Umbral de escalado hacia abajo: 20% CPU
-  - Cooldown: 300 segundos (5 minutos)
+- **Política de Escalado (Target Tracking)**:
+  - **Tipo**: Target Tracking Scaling
+  - **Métrica objetivo**: Utilización promedio de CPU al 50%
+  - **Funcionamiento**: AWS ajusta automáticamente la cantidad de instancias para mantener el CPU promedio en 50%
+  - **Scale Out (agregar instancias)**: Cuando el CPU promedio supera el 50%
+  - **Scale In (quitar instancias)**: Cuando el CPU promedio cae por debajo del 50%
+  - **Warmup Period**: 300 segundos (tiempo que una nueva instancia necesita antes de ser incluida en las métricas de CPU)
 
 ### 4️⃣ Instancias EC2 - Backend REST (Réplicas del ASG)
 
@@ -276,23 +278,44 @@ Petición 4 → Load Balancer → Instancia 1 (10.0.1.15:8000)
 
 ### 📈 Escenarios de Escalado Automático
 
-#### Escalado Horizontal hacia Arriba (Scale Out)
+#### **Scale Out (Agregar Instancias)**
 
-**Trigger**: Uso de CPU > 50% durante 2 minutos consecutivos
+**Trigger**: Utilización promedio de CPU > 50% de forma sostenida
 
 **Proceso**:
+1. CloudWatch monitorea continuamente la utilización de CPU de las instancias activas
+2. Cuando el promedio supera el 50%, CloudWatch notifica al Auto Scaling Group
+3. El ASG decide crear una nueva instancia para distribuir mejor la carga
+4. Se crea una nueva instancia EC2 usando el **Launch Template**
+5. El **User Data script** se ejecuta automáticamente
+6. La instancia comienza a exponer el puerto 8000
+7. **Warmup Period (300 segundos)**: Durante este tiempo, la instancia está "calentándose":
+   - El Target Group realiza health checks
+   - La instancia procesa peticiones, pero su CPU NO se incluye en las métricas del ASG
+   - Esto evita que el escalado se dispare erróneamente mientras la instancia se inicializa
+8. Después del warmup, la instancia pasa los health checks y se marca como "healthy"
+9. El Load Balancer comienza a enviar tráfico normal a la nueva instancia
+10. La nueva instancia ahora SÍ se incluye en el cálculo del CPU promedio
 
-1. CloudWatch detecta alta utilización de CPU en las instancias actuales
-2. Auto Scaling Group decide crear una nueva instancia
-3. Se crea una nueva instancia EC2 usando el Launch Template
-4. El User Data script se ejecuta automáticamente
-5. La instancia comienza a exponer el puerto 8000
-6. El Target Group realiza health checks
-7. Una vez que la instancia pasa los health checks, se marca como "healthy"
-8. El Load Balancer comienza a enviar tráfico a la nueva instancia
+**Resultado**: El sistema distribuye la carga entre más instancias, reduciendo el CPU promedio hacia el objetivo del 50%.
 
-**Resultado**: El sistema ahora puede manejar más peticiones concurrentes.
+#### **Scale In (Quitar Instancias)**
+**Trigger**: Utilización promedio de CPU < 50% de forma sostenida (con la carga bien distribuida)
 
+**Proceso**:
+1. CloudWatch detecta que el CPU promedio está consistentemente por debajo del 50%
+2. El ASG determina que hay capacidad de sobra y puede eliminar una instancia
+3. El Load Balancer deja de enviar tráfico **nuevo** a la instancia seleccionada para terminar
+4. **Connection Draining**: Se espera a que la instancia termine de procesar las peticiones en curso
+5. Una vez que no hay conexiones activas, la instancia EC2 se termina (destruye)
+6. El Target Group actualiza su lista de instancias disponibles
+
+**Resultado**: Optimización de costos al eliminar capacidad innecesaria, manteniendo el CPU promedio en ~50%.
+
+**Nota importante sobre Target Tracking**: 
+- AWS evalúa las métricas cada 60 segundos por defecto
+- El escalado NO es instantáneo; AWS espera a ver una tendencia sostenida antes de actuar
+- Scale In es más conservador que Scale Out (AWS prefiere mantener capacidad extra que quedarse corto)
 
 ### 🏥 Health Checks y Recuperación Automática
 
@@ -360,7 +383,7 @@ Petición 4 → Load Balancer → Instancia 1 (10.0.1.15:8000)
 | **Punto de Entrada** | IP pública de instancia única | DNS del Load Balancer |
 | **Número de Instancias Backend** | 1 (fija) | 1-3 (dinámico) |
 | **Disponibilidad** | SPOF (Single Point of Failure) | Alta disponibilidad (múltiples instancias) |
-| **Escalabilidad** | Manual (crear instancia manualmente) | Automática (ASG) |
+| **Escalabilidad** | Manual (crear instancia manualmente) | Automática (Target Tracking al 50% CPU) |
 | **Distribución de Carga** | Una instancia maneja todo | Load Balancer distribuye el tráfico |
 | **Recuperación ante Fallos** | Manual (requiere intervención) | Automática (ASG reemplaza instancias) |
 | **Almacenamiento de Videos** | NFS compartido | S3 Bucket |
