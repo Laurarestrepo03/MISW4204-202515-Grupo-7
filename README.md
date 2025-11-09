@@ -9,11 +9,10 @@ Nicolás Javier Jaramillo Cely | nj.jaramillo@uniandes.edu.co
 Laura María Restrepo Palomino | l.restrepop@uniandes.edu.co
 
 ## Documentación y Contenido del Repositorio
-La documentación relevante a la entrega 2, y otro contenido de interés puede ser accedido mediante los siguientes enlaces:
-- [Documentación](docs/Entrega_2/)
+La documentación relevante a la entrega 3, y otro contenido de interés puede ser accedido mediante los siguientes enlaces:
+- [Documentación](docs/Entrega_3/)
     - [Diagramas y modelos](docs/Entrega_2/diagramas.md)
-    - [Arquitectura](docs/Entrega_2/arquitectura.md)
-    - [Reporte SonarQube](docs/Entrega_2/sonarqube.md)
-- [Sustentación (video)](sustentacion/Entrega_2.md)
-- [Pruebas de carga](capacity-planning/Entrega_2/pruebas_de_carga_entrega2.md)
+    - [Arquitectura](docs/Entrega_3/arquitectura.md)
+- [Sustentación (video)](sustentacion/Entrega_3.md)
+- [Pruebas de carga](capacity-planning/Entrega_3/pruebas_de_carga_entrega2.md)
 
