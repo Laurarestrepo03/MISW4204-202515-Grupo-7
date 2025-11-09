@@ -8,6 +8,7 @@ from s3 import retrieve_file_from_bucket, upload_file_to_bucket
 import models
 import time
 import shutil
+import os
 
 celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://localhost:6379")
 
@@ -36,10 +37,8 @@ def process_video(video_name: str, title: str, video_id: int):
     try:
         #raise TypeError("Forced error") # -> Descomentar esta linea para forzar un error
         # Crear carpeta processed si no existe
-        temp_dir_original = Path("temp_files/original")
-        temp_dir_original.mkdir(parents=True, exist_ok=True)
-        temp_dir_processed = Path("temp_files/processed")
-        temp_dir_processed.mkdir(parents=True, exist_ok=True)
+        os.makedirs("temp_files/original", exist_ok=True)
+        os.makedirs("temp_files/processed", exist_ok=True)
 
         s3_path="original_videos/"+video_name
         local_path = "temp_files/original/"+video_name
@@ -79,8 +78,6 @@ def process_video(video_name: str, title: str, video_id: int):
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
-    finally:
-        shutil.rmtree("temp_files")
         
 
 def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
