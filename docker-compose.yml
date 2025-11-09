@@ -18,16 +18,19 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
-    image: redis
+  app:
+    build: .
+    command: uvicorn main:app --host 0.0.0.0
     ports:
-      - "6379:6379"
-  redis-commander:
-    image: rediscommander/redis-commander
-    ports:
-      - "8081:8081"
+      - "8000:8000"
     environment:
-      - REDIS_HOSTS=local:redis:6379
+      DATABASE_HOSTNAME: localhost
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${POSTGRES_DB:-anb}
+      DATABASE_USER: ${POSTGRES_USER:-postgres}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      - postgres
 
 volumes:
   postgres_data:
