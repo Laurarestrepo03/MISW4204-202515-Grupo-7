@@ -5,8 +5,8 @@ import time
 
 def escenario_2_db_injector():
     db = SessionLocal()
-    delay_between_videos = 1
-    number_petitions = 1
+    delay_between_videos = 30
+    number_petitions = 20
     try:
         for _ in range(number_petitions):
             title = "video-50mb"
@@ -14,7 +14,7 @@ def escenario_2_db_injector():
             db_video = models.Video(original_filename=title + ".mp4", title=title,
                                     status=models.VideoStatus.UPLOADED,
                                     uploaded_at=datetime.now(timezone.utc),
-                                    processed_at=None, original_url=original_url, processed_url=None, user_id=62)
+                                    processed_at=None, original_url=original_url, processed_url=None, user_id=179)
             db.add(db_video)
             db.commit()
             db.refresh(db_video)
@@ -37,7 +37,7 @@ def escenario_2_celery_injector():
             db_video = models.Video(original_filename=title + ".mp4", title=title,
                                     status=models.VideoStatus.UPLOADED,
                                     uploaded_at=datetime.now(timezone.utc),
-                                    processed_at=None, original_url=original_url, processed_url=None, user_id=62)
+                                    processed_at=None, original_url=original_url, processed_url=None, user_id=179)
             db.add(db_video)
             db.commit()
             db.refresh(db_video)

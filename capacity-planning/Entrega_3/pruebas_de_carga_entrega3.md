@@ -67,7 +67,7 @@ Se recomienda incrementar la capacidad de conexiones persistentes a la base de d
 Medir cuántos videos por minuto procesa el worker a distinto volúmen de videos a ejecutar y tamaño de videos.
 
 ### Diseño experimental
-Tamaño de video: 50 MB y 100 MB aproximadamente. Enviar lotes de un video cada 30 segundos - 1 minuto. Realizar esto 10 veces.
+Tamaño de video: 50 MB y 100 MB aproximadamente. Enviar lotes de un video cada 30 segundos - 1 minuto. Realizar esto 20 veces.
 #### Para cada combinación:
 * Ejecutar pruebas de saturación: subir la cantidad de tareas progresivamente en la cola
 * Ejecutar pruebas sostenidas: mantener un numero fijo de archivos en la cola que no la sature
@@ -95,37 +95,45 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
 
 * Inyección de 1 video (50MB) cada 30 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 18 minutos
-  - Tiempo promedio por video: 1.8 minutos
-  - Uso promedio de CPU: 89%
-  - Uso promedio de memoria: 820MB
-  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.55 videos/minuto a 30MB
-  - Puntos de saturación: CPU al 95% al terminar de enviarse todos los videos.
+  - Tiempo total de procesamiento: 60 minutos
+  - Tiempo promedio por video: 2:56 minutos
+  - Uso promedio de CPU: 73%
+  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.32 videos/minuto a 50MB
+  - Puntos de saturación: CPU al 73%, no hubo puntos de fallo, se saturó la cola de mensajes.
 * Inyección de 1 video (50MB) cada 60 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 16 minutos
-  - Tiempo promedio por video: 1.6 minutos
-  - Uso promedio de CPU: 90%
-  - Uso promedio de memoria: 810MB
-  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.625 videos/minuto a 30MB
-  - Puntos de saturación: CPU al 96% al terminar de enviarse todos los videos.
-* * Inyección de 1 video (100MB) cada 30 segundos:
+  - Tiempo total de procesamiento: 120 minutos
+  - Tiempo promedio por video: 2:57 minutos
+  - Uso promedio de CPU: 75%
+  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.32 videos/minuto a 50MB
+  - Puntos de saturación: CPU al 75%, no hubo puntos de fallo, se saturó la cola de mensajes.
+ ### Uso de CPU en las pruebas de carga para 50 MB en sus dos tandas: 
+  <img width="1444" height="680" alt="CPU1" src="https://github.com/user-attachments/assets/7280cba3-ac9d-4e7c-a13f-86d812301fde" />
+
+* Inyección de 1 video (100MB) cada 30 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 18 minutos
-  - Tiempo promedio por video: 1.8 minutos
-  - Uso promedio de CPU: 89%
-  - Uso promedio de memoria: 820MB
-  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.55 videos/minuto a 30MB
-  - Puntos de saturación: CPU al 95% al terminar de enviarse todos los videos.
+  - Tiempo total de procesamiento: 32 minutos
+  - Tiempo promedio por video: 5:30 minutos
+  - Uso promedio de CPU: 80%
+  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.19 videos/minuto a 100MB
+  - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. Se saturó la CPU a mitad de las pruebas, lo que produjo que estas se detuvieran.
 * Inyección de 1 video (100MB) cada 60 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 16 minutos
-  - Tiempo promedio por video: 1.6 minutos
-  - Uso promedio de CPU: 90%
-  - Uso promedio de memoria: 810MB
-  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.625 videos/minuto a 30MB
-  - Puntos de saturación: CPU al 96% al terminar de enviarse todos los videos.
+  - Tiempo total de procesamiento: 30 minutos
+  - Tiempo promedio por video: 5:31 minutos
+  - Uso promedio de CPU: 83%
+  - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.19 videos/minuto a 100MB
+  - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. Se saturó la CPU al realizar 5 procesamientos de video, lo que produjo que estas se detuvieran.
+
+ ### Uso de CPU en las pruebas de carga para 100 MB. Se evidencia una caida repentina en el uso de CPU, esto se da por la saturación de CPU y el crasheo del servicio:
+  <img width="1805" height="878" alt="CPU2" src="https://github.com/user-attachments/assets/9a0ae5a8-98ff-408a-9e19-d7b033204099" />
+
  
+|Tamaño Video| Parametros               | Videos/minuto | Uso Promedio CPU |
+|------------|--------------------------|---------------|------------------|
+|50 MB       | 1 video cada 30 segundos a la cola| 0.32          | 73%-75%          |
+|50 MB       | 1 video cada 60 segundos a la cola | 0.32          | 73%-75%          |
+|100 MB      | 1 video cada 30 segundos a la cola | 0.19          | 80%-83%          |
+|100 MB      | 1 video cada 60 segundos a la cola | 0.19          | 80%-83%          |
 ### Recomendaciones para escalar la solución
-* Aumentar el número de hilos del worker para aprovechar mejor la capacidad de la CPU.
 * Aumentar el número de máquinas virtuales worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU.

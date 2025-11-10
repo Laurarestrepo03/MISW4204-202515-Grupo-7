@@ -63,9 +63,8 @@ def upload_video(
         return four_hundred_error
     
     # Se guarda el video original para procesarlo
-    os.chdir('..')
     upload_dir = Path("temp_files/original")
-    upload_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs("temp_files/original", exist_ok=True)
     # Sanitizar el nombre del archivo para prevenir path traversal
     safe_filename = os.path.basename(video_file.filename).replace(" ", "_")
     file_location = upload_dir / safe_filename
@@ -91,7 +90,8 @@ def upload_video(
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
-        shutil.rmtree("temp_files")
+        if os.path.exists("temp_files"):
+            shutil.rmtree("temp_files")
 
 def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
