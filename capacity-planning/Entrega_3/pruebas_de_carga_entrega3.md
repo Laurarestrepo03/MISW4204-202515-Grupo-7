@@ -107,26 +107,33 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
   - Uso promedio de CPU: 75%
   - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.32 videos/minuto a 50MB
   - Puntos de saturación: CPU al 75%, no hubo puntos de fallo, se saturó la cola de mensajes.
+ ### Uso de CPU en las pruebas de carga para 50 MB en sus dos tandas: 
+  <img width="1444" height="680" alt="CPU1" src="https://github.com/user-attachments/assets/7280cba3-ac9d-4e7c-a13f-86d812301fde" />
+
 * Inyección de 1 video (100MB) cada 30 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 1 hora 52 minutos
+  - Tiempo total de procesamiento: 32 minutos
   - Tiempo promedio por video: 5:30 minutos
   - Uso promedio de CPU: 80%
   - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.19 videos/minuto a 100MB
   - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. Se saturó la CPU a mitad de las pruebas, lo que produjo que estas se detuvieran.
 * Inyección de 1 video (100MB) cada 60 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 1 hora 52 minutos
-  - Tiempo promedio por video: 5:30 minutos
+  - Tiempo total de procesamiento: 30 minutos
+  - Tiempo promedio por video: 5:31 minutos
   - Uso promedio de CPU: 83%
   - Videos procesados por minuto: 1 nodo x 1 hilo -> 0.19 videos/minuto a 100MB
   - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. Se saturó la CPU al realizar 5 procesamientos de video, lo que produjo que estas se detuvieran.
+
+ ### Uso de CPU en las pruebas de carga para 100 MB. Se evidencia una caida repentina en el uso de CPU, esto se da por la saturación de CPU y el crasheo del servicio:
+  <img width="1805" height="878" alt="CPU2" src="https://github.com/user-attachments/assets/9a0ae5a8-98ff-408a-9e19-d7b033204099" />
+
  
 |Tamaño Video| Parametros               | Videos/minuto | Uso Promedio CPU |
 |------------|--------------------------|---------------|------------------|
-|50 MB       | 1 video cada 30 segundos | 0.32          | 73%-75%          |
-|50 MB       | 1 video cada 60 segundos | 0.32          | 73%-75%          |
-|100 MB      | 1 video cada 30 segundos | 0.19          | 80%-83%          |
-|100 MB      | 1 video cada 60 segundos | 0.19          | 80%-83%          |
+|50 MB       | 1 video cada 30 segundos a la cola| 0.32          | 73%-75%          |
+|50 MB       | 1 video cada 60 segundos a la cola | 0.32          | 73%-75%          |
+|100 MB      | 1 video cada 30 segundos a la cola | 0.19          | 80%-83%          |
+|100 MB      | 1 video cada 60 segundos a la cola | 0.19          | 80%-83%          |
 ### Recomendaciones para escalar la solución
 * Aumentar el número de máquinas virtuales worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU.
