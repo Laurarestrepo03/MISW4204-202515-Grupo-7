@@ -90,6 +90,8 @@ def upload_video(
                             content = {"message": f"Hubo un error subiendo el archivo, por favor intentar de nuevo. Error: {e}"})
     finally:
         video_file.file.close()
+        if os.path.exists("temp_files"):
+            shutil.rmtree("temp_files")
 
 def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id: int, db: db_dependency):
     original_url = "https://anb.com/uploads/"+title.replace(" ", "_")+".mp4"
