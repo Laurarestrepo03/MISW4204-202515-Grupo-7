@@ -18,7 +18,7 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 
 ### Herramientas utilizadas
 * Generador: JMeter
-* Observabilidad: Prometheus/Grafana
+* Observabilidad: Excel
 
 ### Salidas esperadas
 * Curva usuarios→latencia/errores/exitos.
@@ -29,9 +29,9 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 * Se crearon 3 treads de usuarios en JMeter, cada uno enviando peticiones de subida de video de aproximadamente 8MB de tamaño; de acuerdo a cada escenario de prueba.
 * El archivo plantilla en Jmeter se encuentra en el repositorio en el archivo: [HTTP_Request_cargar_videos.jmx](HTTP_Request_cargar_videos.jmx)
 * Los archivos con los resultados de las pruebas se encuentran en la carpeta [/results](results/).
-* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 80 usuarios concurrentes en un periodo de tiempo de 3 minutos presentando una degradación considerable. El 90% de las peticiones presentaron respuesta exitosa, aunque la latencia alcanzó niveles significativos, llegando a varios segundos en algunas peticiones.
-* A partir de 120 usuarios, se empiezan a observar una mayor cantidad de errores 500 en las respuestas, aproximadamente en el 17%, y la latencia de las peticiones empieza a aumentar hasta llegar a un valores por encima de los 100 segundos.
-* A partir de esto se determina que el valor de RPS (Request per second) es de aproximadamente 0.44.
+* Al realizar la prueba de escalamiento rápido, se encontró que la capa web soporta hasta 80 usuarios concurrentes en un periodo de tiempo de 3 minutos presentando una degradación considerable. El 78% de las peticiones presentaron respuesta exitosa, mientras que la latencia se mantuvo en niveles intermedios, llegando a varios segundos en algunas peticiones.
+* A partir de 120 usuarios, se empiezan a observar una mayor cantidad de errores 500 en las respuestas, aproximadamente en el 51%, y la latencia de las peticiones empieza a aumentar hasta llegar a un valores por encima de los 30 segundos.
+* A partir de esto se determina que el valor de RPS (Request per second) es de aproximadamente 0.34.
 * A partir de los logs del aplicativo, se encontró que el cuello de botella es la base de datos. Se está alcanzando el límite de conexiones rapidamente, lo que tumba la conexión entre el aplicativo y la base de datos, dejando el sistema inutilizable hasta que este se reinicie.
 * A continuación se presentan los gráficos de la ejecución de la prueba.
 
