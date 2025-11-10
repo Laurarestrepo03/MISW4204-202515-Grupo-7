@@ -49,3 +49,5 @@ ejecutar_sonarqube.sh
 !*sonarqube.md
 
 .env
+
+user_data.sh
