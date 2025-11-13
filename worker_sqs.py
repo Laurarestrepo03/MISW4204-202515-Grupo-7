@@ -89,7 +89,7 @@ class SQSCipherWorker:
             video = CompositeVideoClip([background, video])
 
             # 4. Agregar logo ANB
-            anb_logo = VideoFileClip("assets/anb_logo.mp4").resized(height=resolution)
+            anb_logo = VideoFileClip("anb_logo.mp4").resized(height=resolution)
             videos = [anb_logo, video, anb_logo]
             final_video = concatenate_videoclips(videos, method='compose')
             no_spaces_title = title.replace(" ", "_")+".mp4"
