@@ -10,6 +10,7 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from s3 import upload_file_to_bucket
+from sqs import add_video_to_process
 import models
 import shutil
 import os
@@ -82,6 +83,7 @@ def upload_video(
             return four_hundred_error
         upload_file_to_bucket(file_location, "original_videos/"+video_file.filename.replace(" ", "_"))
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
+        add_video_to_process(video_id)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "video_id": video_id}) 

@@ -78,6 +78,7 @@ def process_video(video_name: str, title: str, video_id: int):
         update_uploaded_info(video_id, datetime.now(timezone.utc), processed_url)
     except Exception:
         process_video.retry()
+    finally:
         if os.path.exists("temp_files"):
             shutil.rmtree("temp_files")
         
