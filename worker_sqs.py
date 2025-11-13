@@ -53,7 +53,7 @@ class SQSCipherWorker:
         finally:
             db.close()
         
-        return True
+        return payload
     
     def consume_message(self) -> Optional[Dict]:
         """
@@ -151,7 +151,6 @@ class SQSCipherWorker:
                 if result:
                     print(f"[{self.processed_count}] Procesado:")
                     print(f"  ID Video:  {result['video_id']}")
-                    print(f"  Estado:   {result['status']}")
                 else:
                     if not continuous:
                         print("⏳ No hay mensajes disponibles")
