@@ -105,7 +105,7 @@ class SQSCipherWorker:
             if os.path.exists("temp_files"):
                 shutil.rmtree("temp_files")
 
-    def update_uploaded_info(video_id: int, processed_at: datetime, processed_url: str):
+    def update_uploaded_info(self, video_id: int, processed_at: datetime, processed_url: str):
         db = SessionLocal()
         try:
             video = db.get(models.Video, video_id)
