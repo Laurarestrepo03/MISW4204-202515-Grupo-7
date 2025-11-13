@@ -14,17 +14,8 @@ def send_message(video_id: int):
         response = sqs.send_message(
             QueueUrl = sqs_url,
             MessageBody = json.dumps(payload),
-
         )
         return True
     except ClientError as e:
         print(f"✗ Error al enviar mensaje: {e}")
         return False
-
-
-def check_unprocessed_messages():
-    response = sqs.receive_message(
-        QueueUrl=sqs_url,
-        MaxNumberOfMessages=1,  # Receive one message at a time
-        WaitTimeSeconds=10,     # Ena Retrieve all message attributes
-    )
