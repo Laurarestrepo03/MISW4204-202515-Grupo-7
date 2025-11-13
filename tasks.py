@@ -5,7 +5,7 @@ from pathlib import Path
 from database import SessionLocal
 from celery.signals import worker_ready
 from s3 import retrieve_file_from_bucket, upload_file_to_bucket
-from sqs import check_unprocessed_messages
+from worker_sqs import consume_message
 import models
 import time
 import shutil
@@ -15,7 +15,7 @@ celery_app = Celery("tasks", broker="redis://localhost:6379", backend="redis://l
 
 @worker_ready.connect
 def at_start(sender, **kwargs):
-    check_unprocessed_messages()
+    consume_message()
     #check_unprocessed_videos.delay(True)
 
 @celery_app.task()
