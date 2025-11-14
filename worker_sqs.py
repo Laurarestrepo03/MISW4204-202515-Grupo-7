@@ -241,7 +241,6 @@ class SQSCipherWorker:
 def main():
     """Función principal para ejecutar el worker"""
     worker = SQSCipherWorker(
-        queue_name='message-queue',
         region_name='us-east-1',
     )
     
