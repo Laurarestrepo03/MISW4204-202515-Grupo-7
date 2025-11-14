@@ -18,7 +18,6 @@ import auth
 import boto3
 
 app = FastAPI()
-s3 = boto3.client('s3')
 models.Base.metadata.create_all(bind=engine)
 
 # Modelos Pydantic para respuestas
@@ -185,6 +184,7 @@ def get_video(
         "processed_at": video.processed_at.isoformat() if video.processed_at else None,
         "original_url": video.original_url,
         "processed_url": video.processed_url,
+        "task_id": video.task_id,
         "votes": video.votes,
         "user": {
             "email": current_user.email,
