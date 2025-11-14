@@ -50,4 +50,5 @@ ejecutar_sonarqube.sh
 
 .env
 
-user_data.sh
+user_data_backend.sh
+user_data_worker.sh

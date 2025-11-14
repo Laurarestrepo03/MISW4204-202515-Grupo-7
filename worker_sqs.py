@@ -15,16 +15,14 @@ import models
 import shutil
 
 class SQSCipherWorker:
-    def __init__(self, queue_name='ANB_SQS', region_name='us-east-1'):
+    def __init__(self, region_name='us-east-1'):
         """
         Inicializa el worker SQS
         
         Args:
-            queue_name: Nombre de la cola SQS
             region_name: Región de AWS
             shift: Desplazamiento para cifrado César
         """
-        self.queue_name = queue_name
         self.region_name = region_name
         self.processed_count = 0
         
@@ -32,11 +30,14 @@ class SQSCipherWorker:
         self.sqs = boto3.client('sqs', region_name=region_name)
         
         # Obtener URL de la cola
-        self.queue_url = "https://sqs.us-east-1.amazonaws.com/490225881732/ANB_SQS"
+        self.queue_url = os.getenv('SQS_URL', '')
+
+        # Obtener nombre de la cola
+        self.queue_name = os.getenv('QUEUE_NAME', '')
     
     def process_message(self, payload: dict) -> dict:
         """
-        Inicia el procesamiento de un video
+        Procesa un mensaje y obtiene el ID del video para mandarlo a procesar
         
         Args:
             payload: Diccionario con el ID del video

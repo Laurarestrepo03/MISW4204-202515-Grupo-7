@@ -3,7 +3,7 @@ import os
 
 s3 = boto3.client('s3')
 
-bucket_name = os.getenv('S3_BUCKET', 'anb-s3-bucket')
+bucket_name = os.getenv('S3_BUCKET', '')
 
 def upload_file_to_bucket(file_path: str, s3_path: str):
     s3.upload_file(file_path, bucket_name, s3_path)

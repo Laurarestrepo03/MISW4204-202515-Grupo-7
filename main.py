@@ -10,7 +10,7 @@ from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
 from s3 import upload_file_to_bucket
-from sqs import send_message
+from producer_sqs import send_message
 import models
 import shutil
 import os
