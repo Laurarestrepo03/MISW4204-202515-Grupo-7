@@ -83,7 +83,8 @@ def upload_video(
             return four_hundred_error
         upload_file_to_bucket(file_location, "original_videos/"+video_file.filename.replace(" ", "_"))
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
-        send_message(video_id)
+        message_id = send_message(video_id)
+        add_message_id(video_id, message_id)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "video_id": video_id}) 
@@ -105,6 +106,12 @@ def add_uploaded_video(filename:str, title: str, uploaded_at: datetime, user_id:
     video_id = db_video.video_id
     return video_id
 
+def add_message_id(video_id, message_id, db: db_dependency):
+    video = db.get(models.Video, video_id)
+    if video:
+        video.task_id = str(message_id)
+        db.commit()
+    
 # 2. Consultar mis videos
 @app.get("/api/videos")
 def get_videos_uploaded(

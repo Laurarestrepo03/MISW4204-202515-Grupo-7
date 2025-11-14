@@ -16,7 +16,7 @@ def send_message(video_id: int):
             QueueUrl = sqs_url,
             MessageBody = json.dumps(payload),
         )
-        return True
+        return response['MessageId']
     except ClientError as e:
         print(f"✗ Error al enviar mensaje: {e}")
         return False
