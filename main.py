@@ -84,7 +84,7 @@ def upload_video(
         upload_file_to_bucket(file_location, "original_videos/"+video_file.filename.replace(" ", "_"))
         video_id = add_uploaded_video(video_file.filename, title, datetime.now(timezone.utc), current_user.user_id, db)
         message_id = send_message(video_id)
-        add_message_id(video_id, message_id)
+        add_message_id(video_id, message_id, db)
         return JSONResponse(status_code = status.HTTP_201_CREATED, 
                             content = {"message": "Video subido correctamente. Procesamiento en curso",
                             "video_id": video_id}) 
