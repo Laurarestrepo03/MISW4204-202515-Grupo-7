@@ -113,8 +113,9 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
   - Uso promedio de CPU: 74%
   - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.96 videos/minuto a 50MB
   - Puntos de saturación: CPU al 75%, no hubo puntos de fallo, NO se saturó la cola de mensajes. La cantidad de mensajes en la cola SQS se mantuvo constante, ya que el tiempo de procesamiento por cada video era casi igual al tiempo en que se generaban los mensajes.
- ### Uso de CPU en las pruebas de carga para 50 MB en sus dos tandas: 
-  <img width="1444" height="680" alt="CPU1" src="https://github.com/user-attachments/assets/7280cba3-ac9d-4e7c-a13f-86d812301fde" />
+ ### Uso de CPU en las pruebas de carga para 50 MB en la instancia inicial: 
+ <img width="1595" height="680" alt="instancia 2" src="https://github.com/user-attachments/assets/01f03905-fdca-41c2-8b83-2173b81cdc9d" />
+
 
 * Inyección de 1 video (100MB) cada 30 segundos:
   - Videos procesados: 20
@@ -131,8 +132,11 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
   - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.58 videos/minuto a 100MB
   - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. La cola de mensajes se mantuvo constante los primeros dos minutos, eventualmente esta se saturó, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
 
- ### Uso de CPU en las pruebas de carga para 100 MB. Se evidencia una caida repentina en el uso de CPU, esto se da por la saturación de CPU y el crasheo del servicio:
-  <img width="1805" height="878" alt="CPU2" src="https://github.com/user-attachments/assets/9a0ae5a8-98ff-408a-9e19-d7b033204099" />
+ ### Uso de CPU en las pruebas de carga para 100 MB en una de las instancias de autoescalado. 
+ <img width="1681" height="690" alt="Instancia 1" src="https://github.com/user-attachments/assets/6785fb63-eb42-43cd-8f40-f510d4aec0b9" />
+
+ ### Replicación de las instancias Worker, se evidencia la instancia original y las dos instancias replicadas.
+<img width="1264" height="302" alt="Replicación de instancias worker" src="https://github.com/user-attachments/assets/484b227f-e5de-4839-98c6-ff9391ad7796" />
 
  
 |Tamaño Video| Parametros               | Videos/minuto | Uso Promedio CPU |
