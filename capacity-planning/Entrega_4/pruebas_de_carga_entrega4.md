@@ -37,32 +37,35 @@ Capacidad máxima, mayor número de usuarios concurrentes que cumple:
 
 #### 80 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-<img width="1144" height="666" alt="image" src="https://github.com/user-attachments/assets/62bbd710-8387-4708-bddd-6a57740f401e" />
+<img width="1056" height="621" alt="image" src="https://github.com/user-attachments/assets/d50134d0-cd2d-489a-8d91-7e9db4f1bafa" />
 
 
 * Latencia
-<img width="1135" height="476" alt="image" src="https://github.com/user-attachments/assets/860a8522-d90d-46c5-9baf-2f9f41a9531a" />
+<img width="1043" height="444" alt="image" src="https://github.com/user-attachments/assets/f5e97f22-e487-44e4-9b6c-28f2cea05174" />
 
 
 
 #### 120 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-<img width="1055" height="613" alt="image" src="https://github.com/user-attachments/assets/17286c86-93a7-4d12-8dea-872cafbc7e53" />
+<img width="1351" height="774" alt="image" src="https://github.com/user-attachments/assets/2c2b0751-47f6-4f4b-8c6a-aa74a458f2a2" />
+
 
 
 * Latencia
-<img width="1040" height="463" alt="image" src="https://github.com/user-attachments/assets/94ca9703-61d4-4bbf-b033-e55f8ac00b04" />
+<img width="1329" height="565" alt="image" src="https://github.com/user-attachments/assets/a4c49a54-4940-423e-abf8-9b666072e44c" />
 
 
 
 #### 150 usuarios
 * Peticiones exitosas (verde) y peticiones fallidas (rojo)
-<img width="1055" height="625" alt="image" src="https://github.com/user-attachments/assets/43b0fb20-94d9-4a3b-b3f0-a5e725f4f4de" />
+<img width="1061" height="626" alt="image" src="https://github.com/user-attachments/assets/7f98ddb3-3450-4e5e-be29-d9f32ce59357" />
+
 
 
 
 * Latencia
-<img width="1041" height="454" alt="image" src="https://github.com/user-attachments/assets/6bb61117-4510-4222-9ba1-b91ea3e61e60" />
+<img width="1046" height="458" alt="image" src="https://github.com/user-attachments/assets/70d88f5b-00ce-44db-849f-5b3ecd6b95ff" />
+
 
 
 
