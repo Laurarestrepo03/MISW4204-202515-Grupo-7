@@ -235,7 +235,8 @@ La arquitectura ahora se compone de 9 componentes principales:
 
 ### Diagrama de Componentes (Entrega 4)
 
-![Diagrama de Componentes](url-del-diagrama-de-componentes)
+<img width="3088" height="1922" alt="image" src="https://github.com/user-attachments/assets/05916a74-18cd-4a8d-b61b-052f7449e796" />
+
 
 El diagrama muestra:
 
@@ -256,7 +257,7 @@ El diagrama muestra:
 
 ### Diagrama de Despliegue (Entrega 4)
 
-![Diagrama de Despliegue](url-del-diagrama-de-despliegue)
+<img width="2727" height="1992" alt="image" src="https://github.com/user-attachments/assets/180634c8-e5ea-4b13-a720-b168df61b71b" />
 
 El diagrama de despliegue ilustra:
 
