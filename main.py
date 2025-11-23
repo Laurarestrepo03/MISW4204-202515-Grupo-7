@@ -133,6 +133,7 @@ def get_videos_uploaded(
             "processed_at": video.processed_at.isoformat() if video.processed_at else None,
             "original_url": video.original_url,
             "processed_url": video.processed_url,
+            "task_id": video.task_id,
             "votes": video.votes
         }
 
