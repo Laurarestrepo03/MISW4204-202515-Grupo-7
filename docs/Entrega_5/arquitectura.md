@@ -241,6 +241,8 @@ En la Entrega 4, el Load Balancer de los workers se usaba para realizar health c
 
 El diagrama muestra:
 
+<img width="2563" height="1935" alt="image" src="https://github.com/user-attachments/assets/7a122381-689d-4411-97bc-39645a2884a6" />
+
 - **Cliente HTTP** conectado al **Application Load Balancer**
 - **Load Balancer** conectado al **Target Group** del ECS Service Web
 - **ECS Cluster** conteniendo:
