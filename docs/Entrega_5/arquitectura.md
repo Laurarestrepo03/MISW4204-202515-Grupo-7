@@ -261,10 +261,55 @@ El diagrama muestra:
 
 ### Diagrama de Despliegue (Entrega 5)
 
-El diagrama de despliegue ilustra:
-
 <img width="2446" height="1998" alt="image" src="https://github.com/user-attachments/assets/d3d642c2-424c-4832-85ef-4a476fd2c07b" />
 
+El diagrama de despliegue ilustra la distribución física de los componentes en AWS:
+
+**VPC AWS** (Virtual Private Cloud):
+- Contenedor principal que agrupa todos los recursos de red
+
+**Subred Pública AZ1 (us-east-1a)**:
+- **AWS-ECS Cluster con tasks en FARGATE**: 
+  - `<<AplicativoFastApi>> ANB-App` - Tarea del backend REST
+- **AWS-ECS Cluster con tasks en FARGATE**: 
+  - `<<SQSWorkerVideos>> ProcesadorVideos` - Tarea del worker de procesamiento
+
+**Subred Pública AZ2 (us-east-1b)**:
+- **AWS-ECS Cluster con tasks en FARGATE**: 
+  - `<<AplicativoFastApi>> ANB-App` - Tarea del backend REST (réplica)
+- **AWS-ECS Cluster con tasks en FARGATE**: 
+  - `<<SQSWorkerVideos>> ProcesadorVideos` - Tarea del worker (réplica)
+
+**Componentes de Infraestructura**:
+- **AWS-ELB** (Elastic Load Balancer): 
+  - Balanceador de carga con Auto Scaling Group
+  - Conectado únicamente a las tareas ANB-App del backend
+  - Distribuye el tráfico TCP/IP entre las tareas disponibles
+  
+- **AWS-SQS** (Cola asíncrona):
+  - Recibe mensajes del backend (ANB-App)
+  - Los workers (ProcesadorVideos) consumen mensajes de esta cola
+  
+- **AWS-RDS** (Base de datos):
+  - `<<DataBase Postgres>> ANBDataBase`
+  - Accesible desde backend y workers via TCP/IP
+  
+- **AWS-S3** (Almacenamiento de archivos):
+  - Almacena videos originales y procesados
+  - Accesible desde backend y workers
+
+**Conexiones de Red (TCP/IP)**:
+- Usuario → AWS-ELB → Tareas ANB-App
+- Tareas ANB-App → AWS-SQS (envío de mensajes)
+- Tareas ANB-App → AWS-RDS (lectura/escritura)
+- Tareas ANB-App → AWS-S3 (subida de videos)
+- AWS-SQS → Tareas ProcesadorVideos (consumo de mensajes)
+- Tareas ProcesadorVideos → AWS-RDS (actualización de estado)
+- Tareas ProcesadorVideos → AWS-S3 (descarga/subida de videos)
+
+**Nota importante**: El diagrama muestra las tareas ECS distribuidas en dos zonas de disponibilidad (AZ1 y AZ2) para garantizar alta disponibilidad. Cada zona tiene réplicas tanto del backend como del worker, permitiendo que el sistema continúe funcionando incluso si una zona falla.
+
+---
 
 ## Flujo de Peticiones y Procesamiento (Entrega 5)
 
