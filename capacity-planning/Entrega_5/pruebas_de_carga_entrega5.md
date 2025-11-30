@@ -78,7 +78,7 @@ Capacidad nominal: (videos/min)
 
 ### Herramientas utilizadas
 * Generador de eventos: Script en Python para inyectar videos en cada una de las combinaciones presentadas anteriormente. La inyección de los videos se realizará automáticamente en la cola de mensajería SQS.
-* Perfilado del worker: Monitoreo de CPU mediante cloudwatch en EC2. Monitoreo del tiempo de procesamiento de los videos mediante la base de datos.
+* Perfilado del worker: Monitoreo de CPU mediante cloudwatch en el cluster de ECS Fargate. Monitoreo del tiempo de procesamiento de los videos mediante la base de datos.
 
 ### Salidas esperadas
 * Capacidad por tamaño y configuración (4 nodos × 4 hilos → 18.5 videos/min a 200
@@ -93,50 +93,47 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
 
 * Inyección de 1 video (50MB) cada 30 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 19 minutos
-  - Tiempo promedio por video: 2:57 minutos
-  - Uso promedio de CPU: 72%
-  - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.96 videos/minuto a 50MB
-  - Puntos de saturación: CPU al 73%, no hubo puntos de fallo, aunque se saturó la cola de mensajes, el tiempo total de procesamiento fue mucho menor. Esto gracias a que el trabajo se distribuyó entre 3 instancias worker.
+  - Tiempo total de procesamiento: 18 minutos
+  - Tiempo promedio por video: 2:42 minutos
+  - Uso promedio de CPU: 83%
+  - Videos procesados por minuto: 3 nodos x 1 hilo -> 1.11 videos/minuto a 50MB
+  - Puntos de saturación: CPU al 83%, no hubo puntos de fallo, aunque se saturó la cola de mensajes, el tiempo total de procesamiento fue ligeramente menor al de la arquitectura anterior. Se presume que esto es debido a que se hace un mejor uso de los recursos al estar dedicados exclusivamente al manejo del contenedor.
 * Inyección de 1 video (50MB) cada 60 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 38 minutos
-  - Tiempo promedio por video: 2:57 minutos
-  - Uso promedio de CPU: 74%
-  - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.96 videos/minuto a 50MB
-  - Puntos de saturación: CPU al 75%, no hubo puntos de fallo, NO se saturó la cola de mensajes. La cantidad de mensajes en la cola SQS se mantuvo constante, ya que el tiempo de procesamiento por cada video era casi igual al tiempo en que se generaban los mensajes.
+  - Tiempo total de procesamiento: 36 minutos
+  - Tiempo promedio por video: 2:43 minutos
+  - Uso promedio de CPU: 84%
+  - Videos procesados por minuto: 3 nodos x 1 hilo -> 1.11 videos/minuto a 50MB
+  - Puntos de saturación: CPU al 84%, no hubo puntos de fallo, NO se saturó la cola de mensajes. La cantidad de mensajes en la cola SQS se mantuvo constante, ya que el tiempo de procesamiento por cada video era menor al que se generaban los mensajes.
  ### Uso de CPU en las pruebas de carga para 50 MB en la instancia inicial: 
  <img width="1595" height="680" alt="instancia 2" src="https://github.com/user-attachments/assets/01f03905-fdca-41c2-8b83-2173b81cdc9d" />
 
 
 * Inyección de 1 video (100MB) cada 30 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 38 minutos
-  - Tiempo promedio por video: 5:32 minutos
-  - Uso promedio de CPU: 81%
-  - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.57 videos/minuto a 100MB
-  - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. La cola de mensajes se saturó desde el inicio, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
+  - Tiempo total de procesamiento: 37 minutos
+  - Tiempo promedio por video: 5:26 minutos
+  - Uso promedio de CPU: 83%
+  - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.55 videos/minuto a 100MB
+  - Puntos de saturación: CPU al 83% en el pico mas alto de procesamiento. La cola de mensajes se saturó desde el inicio, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
 * Inyección de 1 video (100MB) cada 60 segundos:
   - Videos procesados: 20
-  - Tiempo total de procesamiento: 37 minutos
-  - Tiempo promedio por video: 5:31 minutos
+  - Tiempo total de procesamiento: 36 minutos
+  - Tiempo promedio por video: 5:25 minutos
   - Uso promedio de CPU: 83%
   - Videos procesados por minuto: 3 nodos x 1 hilo -> 0.58 videos/minuto a 100MB
-  - Puntos de saturación: CPU al 80% en el pico mas alto de procesamiento. La cola de mensajes se mantuvo constante los primeros dos minutos, eventualmente esta se saturó, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
+  - Puntos de saturación: CPU al 83% en el pico mas alto de procesamiento. La cola de mensajes se mantuvo constante los primeros 3 minutos, eventualmente esta se saturó, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
 
  ### Uso de CPU en las pruebas de carga para 100 MB en una de las instancias de autoescalado. 
  <img width="1681" height="690" alt="Instancia 1" src="https://github.com/user-attachments/assets/6785fb63-eb42-43cd-8f40-f510d4aec0b9" />
 
- ### Replicación de las instancias Worker, se evidencia la instancia original y las dos instancias replicadas.
-<img width="1264" height="302" alt="Replicación de instancias worker" src="https://github.com/user-attachments/assets/484b227f-e5de-4839-98c6-ff9391ad7796" />
-
  
 |Tamaño Video| Parametros               | Videos/minuto | Uso Promedio CPU |
 |------------|--------------------------|---------------|------------------|
-|50 MB       | 1 video cada 30 segundos a la cola| 0.96          | 73%-75%          |
-|50 MB       | 1 video cada 60 segundos a la cola | 0.96          | 72%-74%          |
-|100 MB      | 1 video cada 30 segundos a la cola | 0.57          | 80%-83%          |
+|50 MB       | 1 video cada 30 segundos a la cola| 1.11          | 83%-84%          |
+|50 MB       | 1 video cada 60 segundos a la cola | 1.11          | 83%-84%          |
+|100 MB      | 1 video cada 30 segundos a la cola | 0.55          | 80%-83%          |
 |100 MB      | 1 video cada 60 segundos a la cola | 0.58          | 82%-84%          |
 ### Recomendaciones para escalar la solución
-* Aumentar el número de máquinas virtuales worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU. 
-Para videos de 50MB se tuvo que la cantidad de instancias fue suficiente para mantener un valor constante de videos en la cola SQS sin saturarse, sin embargo para videos de 100MB, la cantidad de instancias no fue suficiente.
+* Aumentar el número de máquinas deseadas en el worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU. Esto también mejorará el tiempo de procesamiento total de los videos.
+Para videos de 50MB se tuvo que la cantidad de contenedores fue suficiente para mantener un valor constante de videos en la cola SQS sin saturarse, sin embargo para videos de 100MB, la cantidad de contenedores no fue suficiente.
