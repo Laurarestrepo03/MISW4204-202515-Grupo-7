@@ -1,0 +1,81 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1764444468958,1927,HTTP Request,201,Created,Ramp 1-1,text,true,,232,4862144,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1910,0,118
+1764444471197,1999,HTTP Request,201,Created,Ramp 1-2,text,true,,232,4862140,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1999,0,103
+1764444473447,1898,HTTP Request,201,Created,Ramp 1-3,text,true,,232,4862136,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1898,0,95
+1764444475699,1780,HTTP Request,201,Created,Ramp 1-4,text,true,,232,4862140,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1780,0,76
+1764444477947,1904,HTTP Request,201,Created,Ramp 1-5,text,true,,232,4862148,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1904,0,86
+1764444480198,2449,HTTP Request,201,Created,Ramp 1-6,text,true,,232,4862136,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2449,0,94
+1764444482448,1798,HTTP Request,201,Created,Ramp 1-7,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1798,0,133
+1764444486948,1860,HTTP Request,201,Created,Ramp 1-9,text,true,,232,4862152,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1860,0,80
+1764444491452,2066,HTTP Request,201,Created,Ramp 1-11,text,true,,232,4862140,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2066,0,79
+1764444484697,9819,HTTP Request,201,Created,Ramp 1-8,text,true,,232,4862140,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,9818,0,172
+1764444493716,1946,HTTP Request,201,Created,Ramp 1-12,text,true,,232,4862176,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1946,0,72
+1764444495950,1736,HTTP Request,201,Created,Ramp 1-13,text,true,,232,4862144,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1736,0,71
+1764444498211,1898,HTTP Request,201,Created,Ramp 1-14,text,true,,232,4862144,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1898,0,86
+1764444489198,12889,HTTP Request,201,Created,Ramp 1-10,text,true,,232,4862140,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,12889,0,103
+1764444500466,2009,HTTP Request,201,Created,Ramp 1-15,text,true,,232,4862144,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2009,0,123
+1764444502730,1777,HTTP Request,201,Created,Ramp 1-16,text,true,,232,4862156,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1777,0,90
+1764444504958,1834,HTTP Request,201,Created,Ramp 1-17,text,true,,232,4862148,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1834,0,95
+1764444507233,1862,HTTP Request,201,Created,Ramp 1-18,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1862,0,98
+1764444509464,2030,HTTP Request,201,Created,Ramp 1-19,text,true,,232,4862140,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2030,0,102
+1764444511714,1828,HTTP Request,201,Created,Ramp 1-20,text,true,,232,4862164,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1828,0,79
+1764444513948,4891,HTTP Request,201,Created,Ramp 1-21,text,true,,232,4862144,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,4891,0,80
+1764444516218,2765,HTTP Request,201,Created,Ramp 1-22,text,true,,232,4862156,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2765,0,95
+1764444518474,1973,HTTP Request,201,Created,Ramp 1-23,text,true,,232,4862144,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1972,0,115
+1764444520702,1871,HTTP Request,201,Created,Ramp 1-24,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1871,0,99
+1764444522968,1798,HTTP Request,201,Created,Ramp 1-25,text,true,,232,4862140,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1797,0,80
+1764444525218,1725,HTTP Request,201,Created,Ramp 1-26,text,true,,232,4862168,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1725,0,83
+1764444527482,1934,HTTP Request,201,Created,Ramp 1-27,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1933,0,148
+1764444529736,2099,HTTP Request,201,Created,Ramp 1-28,text,true,,232,4862148,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2099,0,112
+1764444531957,2262,HTTP Request,201,Created,Ramp 1-29,text,true,,232,4862168,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2262,0,134
+1764444534211,2062,HTTP Request,201,Created,Ramp 1-30,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2062,0,108
+1764444536466,1896,HTTP Request,201,Created,Ramp 1-31,text,true,,232,4862156,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1896,0,103
+1764444538719,7071,HTTP Request,201,Created,Ramp 1-32,text,true,,232,4862172,4,4,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,7071,0,94
+1764444540962,5064,HTTP Request,201,Created,Ramp 1-33,text,true,,232,4862156,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,5064,0,81
+1764444543213,2863,HTTP Request,201,Created,Ramp 1-34,text,true,,232,4862144,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2863,0,83
+1764444545480,1852,HTTP Request,201,Created,Ramp 1-35,text,true,,232,4862156,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1852,0,82
+1764444547716,2260,HTTP Request,201,Created,Ramp 1-36,text,true,,232,4862172,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2260,0,171
+1764444549963,1856,HTTP Request,201,Created,Ramp 1-37,text,true,,232,4862144,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1855,0,94
+1764444552213,1776,HTTP Request,201,Created,Ramp 1-38,text,true,,232,4862152,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1776,0,81
+1764444554463,1882,HTTP Request,201,Created,Ramp 1-39,text,true,,232,4862148,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1882,0,89
+1764444558965,2435,HTTP Request,201,Created,Ramp 1-41,text,true,,232,4862168,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2435,0,99
+1764444561215,9273,HTTP Request,201,Created,Ramp 1-42,text,true,,232,4862136,6,6,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,9273,0,68
+1764444563465,7396,HTTP Request,201,Created,Ramp 1-43,text,true,,232,4862160,5,5,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,7396,0,100
+1764444565715,5163,HTTP Request,201,Created,Ramp 1-44,text,true,,232,4862136,4,4,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,5163,0,105
+1764444556713,14182,HTTP Request,201,Created,Ramp 1-40,text,true,,232,4862136,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,14182,0,86
+1764444567972,2941,HTTP Request,201,Created,Ramp 1-45,text,true,,232,4862156,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,2941,0,92
+1764444570210,1903,HTTP Request,201,Created,Ramp 1-46,text,true,,232,4862172,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,1903,0,94
+1764444572463,18264,HTTP Request,201,Created,Ramp 1-47,text,true,,232,4862136,9,9,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,18264,0,136
+1764444574713,31825,HTTP Request,500,Internal Server Error,Ramp 1-48,text,false,,198,4862140,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31824,0,93
+1764444579207,31572,HTTP Request,500,Internal Server Error,Ramp 1-50,text,false,,198,4862160,16,16,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31572,0,78
+1764444581458,31801,HTTP Request,500,Internal Server Error,Ramp 1-51,text,false,,198,4862148,16,16,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31801,0,93
+1764444583714,32054,HTTP Request,500,Internal Server Error,Ramp 1-52,text,false,,198,4862164,16,16,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,32053,0,82
+1764444585961,31953,HTTP Request,500,Internal Server Error,Ramp 1-53,text,false,,198,4862160,16,16,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31953,0,181
+1764444588209,31676,HTTP Request,500,Internal Server Error,Ramp 1-54,text,false,,198,4862176,16,16,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31676,0,100
+1764444576991,43914,HTTP Request,500,Internal Server Error,Ramp 1-49,text,false,,397,4862156,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,43914,0,78
+1764444590459,31907,HTTP Request,500,Internal Server Error,Ramp 1-55,text,false,,198,4862176,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31907,0,97
+1764444592714,31643,HTTP Request,500,Internal Server Error,Ramp 1-56,text,false,,198,4862140,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31643,0,88
+1764444594970,31792,HTTP Request,500,Internal Server Error,Ramp 1-57,text,false,,198,4862164,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31792,0,154
+1764444597215,31548,HTTP Request,500,Internal Server Error,Ramp 1-58,text,false,,198,4862148,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31548,0,80
+1764444599473,31711,HTTP Request,500,Internal Server Error,Ramp 1-59,text,false,,198,4862148,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31711,0,101
+1764444601715,31598,HTTP Request,500,Internal Server Error,Ramp 1-60,text,false,,198,4862160,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31597,0,88
+1764444603963,31681,HTTP Request,500,Internal Server Error,Ramp 1-61,text,false,,198,4862144,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31681,0,84
+1764444606212,31708,HTTP Request,500,Internal Server Error,Ramp 1-62,text,false,,198,4862140,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31708,0,96
+1764444608458,31669,HTTP Request,500,Internal Server Error,Ramp 1-63,text,false,,198,4862168,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31669,0,95
+1764444610710,31951,HTTP Request,500,Internal Server Error,Ramp 1-64,text,false,,198,4862140,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31951,0,97
+1764444612957,31642,HTTP Request,500,Internal Server Error,Ramp 1-65,text,false,,198,4862164,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31642,0,76
+1764444615207,31700,HTTP Request,500,Internal Server Error,Ramp 1-66,text,false,,198,4862140,15,15,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31700,0,96
+1764444617459,32068,HTTP Request,500,Internal Server Error,Ramp 1-67,text,false,,198,4862144,14,14,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,32068,0,222
+1764444619709,31733,HTTP Request,500,Internal Server Error,Ramp 1-68,text,false,,198,4862176,13,13,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31733,0,99
+1764444621959,31664,HTTP Request,500,Internal Server Error,Ramp 1-69,text,false,,198,4862136,12,12,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31664,0,79
+1764444624208,31739,HTTP Request,500,Internal Server Error,Ramp 1-70,text,false,,198,4862168,11,11,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31739,0,87
+1764444626458,31652,HTTP Request,500,Internal Server Error,Ramp 1-71,text,false,,198,4862156,10,10,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31652,0,118
+1764444628701,31578,HTTP Request,500,Internal Server Error,Ramp 1-72,text,false,,198,4862160,9,9,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31578,0,79
+1764444630955,31575,HTTP Request,500,Internal Server Error,Ramp 1-73,text,false,,198,4862144,8,8,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31575,0,78
+1764444633205,31577,HTTP Request,500,Internal Server Error,Ramp 1-74,text,false,,198,4862160,7,7,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31576,0,80
+1764444635455,31546,HTTP Request,500,Internal Server Error,Ramp 1-75,text,false,,198,4862160,6,6,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31546,0,79
+1764444637705,31758,HTTP Request,500,Internal Server Error,Ramp 1-76,text,false,,198,4862168,5,5,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31758,0,100
+1764444639962,31740,HTTP Request,500,Internal Server Error,Ramp 1-77,text,false,,198,4862152,4,4,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31740,0,93
+1764444642212,31585,HTTP Request,500,Internal Server Error,Ramp 1-78,text,false,,198,4862148,3,3,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31584,0,79
+1764444644448,31567,HTTP Request,500,Internal Server Error,Ramp 1-79,text,false,,198,4862156,2,2,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31567,0,73
+1764444646711,31592,HTTP Request,500,Internal Server Error,Ramp 1-80,text,false,,198,4862148,1,1,http://anb-ecs-lb-597258804.us-east-1.elb.amazonaws.com:8000/api/videos/upload,31591,0,73
