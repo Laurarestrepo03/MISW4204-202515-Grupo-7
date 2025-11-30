@@ -263,7 +263,8 @@ El diagrama muestra:
 
 El diagrama de despliegue ilustra:
 
----
+<img width="2446" height="1998" alt="image" src="https://github.com/user-attachments/assets/d3d642c2-424c-4832-85ef-4a476fd2c07b" />
+
 
 ## Flujo de Peticiones y Procesamiento (Entrega 5)
 
