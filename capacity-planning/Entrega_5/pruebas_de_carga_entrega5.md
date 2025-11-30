@@ -106,8 +106,7 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
   - Videos procesados por minuto: 3 nodos x 1 hilo -> 1.11 videos/minuto a 50MB
   - Puntos de saturación: CPU al 84%, no hubo puntos de fallo, NO se saturó la cola de mensajes. La cantidad de mensajes en la cola SQS se mantuvo constante, ya que el tiempo de procesamiento por cada video era menor al que se generaban los mensajes.
  ### Uso de CPU en las pruebas de carga para 50 MB en la instancia inicial: 
- <img width="1595" height="680" alt="instancia 2" src="https://github.com/user-attachments/assets/01f03905-fdca-41c2-8b83-2173b81cdc9d" />
-
+<img width="1795" height="676" alt="CPU5-1" src="https://github.com/user-attachments/assets/f4562429-a68b-4699-a839-f2fa0680dfb6" />
 
 * Inyección de 1 video (100MB) cada 30 segundos:
   - Videos procesados: 20
@@ -125,7 +124,7 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
   - Puntos de saturación: CPU al 83% en el pico mas alto de procesamiento. La cola de mensajes se mantuvo constante los primeros 3 minutos, eventualmente esta se saturó, ya que el tiempo de procesamiento por cada video era mucho mayor al tiempo en que se generaban los mensajes. Sin embargo fue posible finalizar la prueba exitosamente.
 
  ### Uso de CPU en las pruebas de carga para 100 MB en una de las instancias de autoescalado. 
- <img width="1681" height="690" alt="Instancia 1" src="https://github.com/user-attachments/assets/6785fb63-eb42-43cd-8f40-f510d4aec0b9" />
+<img width="1765" height="646" alt="CPU5-2" src="https://github.com/user-attachments/assets/dc840af5-10a5-459e-8a5c-488778af41a5" />
 
  
 |Tamaño Video| Parametros               | Videos/minuto | Uso Promedio CPU |
@@ -136,4 +135,6 @@ Finalmente se reviso en la base de datos el tiempo estimado en procesar cada vid
 |100 MB      | 1 video cada 60 segundos a la cola | 0.58          | 82%-84%          |
 ### Recomendaciones para escalar la solución
 * Aumentar el número de máquinas deseadas en el worker para distribuir la carga de procesamiento en varios servidores y mitigar el cuello de botella de la CPU. Esto también mejorará el tiempo de procesamiento total de los videos.
-Para videos de 50MB se tuvo que la cantidad de contenedores fue suficiente para mantener un valor constante de videos en la cola SQS sin saturarse, sin embargo para videos de 100MB, la cantidad de contenedores no fue suficiente.
+<img width="1577" height="409" alt="Autoscaling" src="https://github.com/user-attachments/assets/9cad1cdd-c761-488b-8564-c06e751b46ed" />
+  
+* Para videos de 50MB se tuvo que la cantidad de contenedores fue suficiente para mantener un valor constante de videos en la cola SQS sin saturarse, sin embargo para videos de 100MB, la cantidad de contenedores no fue suficiente. Aumentar la capacidad de computo de las tareas del cluster de fargate tambipen podría ayudar a mejorar los tiempos de procesamiento.
